@@ -1,0 +1,16 @@
+{
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true,
+        "source.organizeImports": true
+    },
+    "python.formatting.provider": "black",
+    "python.linting.enabled": false,
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.python"
+    },
+    "[svelte]": {
+        "editor.defaultFormatter": "svelte.svelte-vscode"
+    }
+}
