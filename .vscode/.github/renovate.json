@@ -1,0 +1,15 @@
+{
+    "enabled": true,
+    "extends": [
+        "config:base",
+        ":preserveSemverRanges",
+        "group:recommended",
+        "group:allNonMajor",
+        "schedule:weekends"
+    ],
+    "assigneesFromCodeOwners": true,
+    "assigneesSampleSize": 1,
+    "separateMinorPatch": true,
+    "stabilityDays": 0,
+    "ignorePaths": []
+}

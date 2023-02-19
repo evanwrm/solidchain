@@ -1,6 +1,8 @@
 # Solidchain
 
-This is a web-based application built with [SolidJS](https://www.solidjs.com/) and [LangChain](https://langchain.readthedocs.io/en/latest/), which allows you to index a collection of documents (such as markdown files, PDFs, chat logs, etc.) and search using natural language. The application uses LangChain for chain of thought (CoT) reasoning, and agent based reasoning (e.g. MRKL & ReAct)
+> Caution: currently this is just a small testbed, and should not be used or taken for a real app/reference.
+
+This is a web-based application built with [SolidJS](https://www.solidjs.com/) and [LangChain](https://langchain.readthedocs.io/en/latest/), which allows you to index a collection of documents (such as markdown files, PDFs, chat logs, etc.) and search using natural language. The application uses LangChain for chain of thought (CoT) reasoning, and agent based reasoning (e.g. MRKL & ReAct).
 
 ## Installation
 
