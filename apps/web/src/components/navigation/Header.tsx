@@ -18,7 +18,7 @@ const Header = () => {
                         <li
                             class={`border-b-2 ${active(
                                 route.path
-                            )} mx-1.5 opacity-80 transition hover:opacity-100 sm:mx-6`}
+                            )} mx-1.5 opacity-80 transition hover:opacity-100 sm:mx-3`}
                         >
                             <A href={route.path}>{route.name}</A>
                         </li>

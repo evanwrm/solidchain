@@ -70,7 +70,7 @@ const Dropzone = (props: Props) => {
                 >
                     <div class="pointer-events-none flex select-none flex-col items-center justify-center">
                         <span class="text-lg">Upload Files</span>
-                        <span class="pb-4 text-sm opacity-60">Upload Files</span>
+                        <span class="pb-4 text-sm opacity-60">{props.accept}</span>
                         <Icon.HiOutlineUpload class="h-6 w-6" />
                     </div>
                 </div>
@@ -85,7 +85,7 @@ const Dropzone = (props: Props) => {
                     <Match when={files().length > 0}>
                         <div class="mt-2">
                             <div class="flex items-center justify-between p-2">
-                                <span>{files().length} file selected.</span>
+                                <span>{files().length} file(s) selected.</span>
                                 <Button.Root
                                     class="rounded-md border border-error px-2 py-1 text-error opacity-80"
                                     onClick={handleClearFiles}
@@ -101,13 +101,18 @@ const Dropzone = (props: Props) => {
                                     return (
                                         <div class="flex flex-row justify-between px-2 py-0.5">
                                             <FileIcon class="h-6 w-6" />
-                                            <NavLink
-                                                href={file.source}
-                                                class="ml-2 flex-1 text-left font-semibold"
-                                            >
-                                                {file.name}
-                                            </NavLink>
-                                            <span class="italic">{formatBytes(file.size)}</span>
+                                            <div class="relative ml-2 flex flex-1 justify-end overflow-hidden">
+                                                <div class="absolute h-full w-1/6 bg-gradient-to-l from-base-100" />
+                                                <NavLink
+                                                    href={file.source}
+                                                    class="w-full text-left font-semibold"
+                                                >
+                                                    {file.name}
+                                                </NavLink>
+                                            </div>
+                                            <span class="ml-2 italic">
+                                                {formatBytes(file.size)}
+                                            </span>
                                         </div>
                                     );
                                 }}
