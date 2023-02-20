@@ -1,0 +1,178 @@
+version: "3.8"
+
+volumes:
+    postgres-data:
+    grafana-data:
+
+networks:
+    proxy-public:
+        # external: true
+
+services:
+    # proxy:
+    #     image: traefik:latest
+    #     command:
+    #         - --api=true
+    #         - --api.dashboard=true
+    #         - --metrics.prometheus=true
+    #         - --metrics.prometheus.manualrouting=true
+    #         - --metrics.prometheus.entryPoint=metrics
+
+    #         - --providers.docker
+    #         - --providers.docker.exposedbydefault=false
+    #         - --providers.file.directory=/etc/traefik/dynamic
+    #         - --providers.file.watch=true
+    #         - --entrypoints.web.address=:80
+    #         - --entrypoints.websecure.address=:443
+    #         - --entrypoints.websecure.http.tls=true
+    #         - --entrypoints.websecure.http.tls.domains[0].main=${DOMAIN?Variable not set}
+
+    #         - --certificatesresolvers.le.acme.httpchallenge=true
+    #         - --certificatesresolvers.le.acme.httpchallenge.entrypoint=web
+    #         - --certificatesresolvers.le.acme.email=${EMAIL?Variable not set}
+    #         - --certificatesresolvers.le.acme.storage=/letsencrypt/acme.json
+
+    #         - --log.level=info
+    #         - --accesslog
+    #         - --log
+    #     ports:
+    #         - "80:80"
+    #         - "443:443"
+    #     env_file:
+    #         - .env
+    #     restart: unless-stopped
+    #     volumes:
+    #         - /var/run/docker.sock:/var/run/docker.sock
+    #         - ./configs/traefik:/etc/traefik/dynamic
+    #         - ./letsencrypt:/letsencrypt
+    #     networks:
+    #         - proxy-public
+    #         - default
+    #     labels:
+    #         - "traefik.enable=true"
+    #         - "traefik.docker.network=proxy-public"
+
+    #         # https redirect catchall
+    #         - "traefik.http.routers.solidchain-fallback.entrypoints=web"
+    #         - "traefik.http.routers.solidchain-fallback.rule=Host(`${DOMAIN?Variable not set}`) && PathPrefix(`/`)"
+    #         - "traefik.http.routers.solidchain-fallback.priority=100"
+    #         - "traefik.http.routers.solidchain-fallback.middlewares=secured@file"
+    #         - "traefik.http.routers.solidchain-fallback.service=noop@internal"
+
+    #         # acme challenge
+    #         # - "traefik.http.routers.acme-http@internal.entrypoints=web"
+    #         # - "traefik.http.routers.acme-http@internal.rule=Host(`${DOMAIN?Variable not set}`) && PathPrefix(`/.well-known/acme-challenge/`)"
+    #         # - "traefik.http.routers.acme-http@internal.priority=999"
+    #         # - "traefik.http.routers.acme-http@internal.service=acme-http@internal"
+
+    #         # traefik dashboard
+    #         - "traefik.http.routers.solidchain-proxy.entrypoints=websecure"
+    #         - "traefik.http.routers.solidchain-proxy.rule=Host(`${DOMAIN?Variable not set}`) && PathPrefix(`/traefik`, `/api`)"
+    #         - "traefik.http.routers.solidchain-proxy.priority=15"
+    #         - "traefik.http.routers.solidchain-proxy.tls.certresolver=le"
+    #         - "traefik.http.routers.solidchain-proxy.tls=true"
+    #         - "traefik.http.routers.solidchain-proxy.middlewares=secured@file,strip-prefix-traefik@file"
+    #         - "traefik.http.routers.solidchain-proxy.service=api@internal"
+    #         - "traefik.http.services.solidchain-proxy.loadbalancer.server.port=8080"
+
+    #         # prometheus metrics
+    #         - "traefik.http.routers.solidchain-metrics.entrypoints=websecure"
+    #         - "traefik.http.routers.solidchain-metrics.rule=Host(`${DOMAIN?Variable not set}`, `prometheus`) && PathPrefix(`/metrics`, `/graph`)"
+    #         - "traefik.http.routers.solidchain-metrics.priority=15"
+    #         - "traefik.http.routers.solidchain-metrics.tls.certresolver=le"
+    #         - "traefik.http.routers.solidchain-metrics.tls=true"
+    #         - "traefik.http.routers.solidchain-metrics.middlewares=secured@file"
+    #         - "traefik.http.routers.solidchain-metrics.service=prometheus@internal"
+    #         - "traefik.http.services.solidchain-metrics.loadbalancer.server.port=9090"
+    # grafana:
+    #     image: grafana/grafana:latest
+    #     ports:
+    #         - "3000:3000"
+    #     env_file:
+    #         - .env
+    #     environment:
+    #         - GF_SERVER_ROOT_URL=https://${DOMAIN?Variable not set}/grafana
+    #         - GF_SERVER_SERVE_FROM_SUB_PATH=true
+    #     volumes:
+    #         - grafana-data:/var/lib/grafana
+    #     labels:
+    #         - "traefik.enable=true"
+    #         - "traefik.http.routers.solidchain-grafana.entrypoints=websecure"
+    #         - "traefik.http.routers.solidchain-grafana.rule=Host(`${DOMAIN?Variable not set}`) && PathPrefix(`/grafana`)"
+    #         - "traefik.http.routers.solidchain-grafana.priority=15"
+    #         - "traefik.http.routers.solidchain-grafana.tls.certresolver=le"
+    #         - "traefik.http.routers.solidchain-grafana.middlewares=secured@file"
+    #         - "traefik.http.services.solidchain-grafana.loadbalancer.server.port=3000"
+
+    # api:
+    #     image: api:latest # solidchain/api:latest
+    #     build:
+    #         context: ./
+    #         dockerfile: ./apps/api/api.dockerfile
+    #     # depends_on:
+    #     #     - db
+    #     ports:
+    #         - "8000:8000"
+    #     env_file:
+    #         - .env
+    #     restart: unless-stopped
+    #     volumes:
+    #         - /mnt/efs/fs1:/app/data
+    #     labels:
+    #         - "traefik.enable=true"
+    #         - "traefik.http.routers.solidchain-api.entrypoints=websecure"
+    #         - "traefik.http.routers.solidchain-api.rule=Host(`${DOMAIN?Variable not set}`) && PathPrefix(`/api/v1`, `/docs`, `/redoc`)"
+    #         - "traefik.http.routers.solidchain-api.priority=20"
+    #         - "traefik.http.routers.solidchain-api.tls.certresolver=le"
+    #         - "traefik.http.routers.solidchain-api.middlewares=secured@file"
+
+    # web:
+    #     image: web:latest # solidchain/web:latest
+    #     build:
+    #         context: ./apps/web
+    #         dockerfile: web.dockerfile
+    #     ports:
+    #         - "3000:3000"
+    #     env_file:
+    #         - .env
+    #         - ./apps/web/.env
+    #     restart: unless-stopped
+    #     labels:
+    #         - "traefik.enable=true"
+    #         - "traefik.http.routers.solidchain-web.entrypoints=websecure"
+    #         - "traefik.http.routers.solidchain-web.rule=Host(`${DOMAIN?Variable not set}`) && PathPrefix(`/`)"
+    #         - "traefik.http.routers.solidchain-web.priority=10"
+    #         - "traefik.http.routers.solidchain-web.tls.certresolver=le"
+    #         - "traefik.http.routers.solidchain-web.tls=true"
+    #         - "traefik.http.routers.solidchain-web.middlewares=secured@file"
+
+    db:
+        image: postgres:15
+        ports:
+            - "5432:5432"
+        restart: unless-stopped
+        volumes:
+            - postgres-data:/var/lib/postgresql/data
+        env_file:
+            - .env
+            - ./apps/api/.env
+    pgadmin:
+        image: dpage/pgadmin4
+        depends_on:
+            - db
+        ports:
+            - "5050:5050"
+        env_file:
+            - .env
+            - ./apps/api/.env
+        environment:
+            - SCRIPT_NAME=/pgadmin4
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.solidchain-pgadmin.entrypoints=websecure"
+            - "traefik.http.routers.solidchain-pgadmin.rule=Host(`${DOMAIN?Variable not set}`) && PathPrefix(`/pgadmin4`)"
+            - "traefik.http.routers.solidchain-pgadmin.priority=15"
+            - "traefik.http.routers.solidchain-pgadmin.tls.certresolver=le"
+            - "traefik.http.routers.solidchain-pgadmin.tls=true"
+            - "traefik.http.routers.solidchain-pgadmin.middlewares=secured@file"
+            - "traefik.http.services.solidchain-pgadmin.loadbalancer.server.port=5050"

@@ -15,7 +15,15 @@ interface Props {
 }
 
 const Dropzone = (props: Props) => {
-    props = mergeProps({ accept: ".pdf,.txt", multiple: true, displayUploads: true }, props);
+    props = mergeProps(
+        {
+            accept: ".txt,.doc,.docx,.ppt,.pptx,.pdf,.eml,text/html,image/*",
+            multiple: true,
+            displayUploads: true
+        },
+        props
+    );
+    const acceptTypes = createMemo(() => props.accept?.split(",").map(t => t.trim()));
 
     const [isDragging, setIsDragging] = createSignal(false);
     const {
@@ -70,7 +78,16 @@ const Dropzone = (props: Props) => {
                 >
                     <div class="pointer-events-none flex select-none flex-col items-center justify-center">
                         <span class="text-lg">Upload Files</span>
-                        <span class="pb-4 text-sm opacity-60">{props.accept}</span>
+                        <div class="mt-1 flex w-2/3 flex-wrap items-center justify-center pb-4 text-sm opacity-60">
+                            <For each={acceptTypes()}>
+                                {(type, i) => (
+                                    <span class="px-1">
+                                        {type}
+                                        {i() < (acceptTypes()?.length ?? 0) - 1 ? "," : ""}
+                                    </span>
+                                )}
+                            </For>
+                        </div>
                         <Icon.HiOutlineUpload class="h-6 w-6" />
                     </div>
                 </div>

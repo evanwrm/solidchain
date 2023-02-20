@@ -118,7 +118,7 @@ dependencies:
     # - cfgrib # grib2 files
     # - netcdf4 # netCDF files
     # - openpyxl
-    # - python-multipart
+    - python-multipart
     # - gdal<4.5 #They removed drivers requried by fiona for geopandas.
     # - fiona
     # - safetensors
@@ -131,11 +131,12 @@ dependencies:
     - pydantic
 
     # Databases / queues
-    # - psycopg2-binary
+    - psycopg2-binary
     # - psycopg2 # build whl file (aarch64 requirement - host needs libpq-dev)
-    # - sqlalchemy
-    # - alembic
+    - sqlalchemy
+    - alembic
     # - celery>=5.0
+    - faiss-cpu
 
     # Scraping / http clients
     # - beautifulsoup4
@@ -161,6 +162,8 @@ dependencies:
           # - flwr[simulation]
           - langchain
           - openai
+          - unstructured[local-inference]
+          - "detectron2@git+https://github.com/facebookresearch/detectron2.git@v0.6#egg=detectron2"
 
     ## Development
     # Environment
