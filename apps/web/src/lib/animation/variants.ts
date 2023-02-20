@@ -17,6 +17,11 @@ export const slideInTopVariants: Record<string, Variant> = {
     hidden: { y: -75, opacity: 0 },
     visible: { y: 0.1, opacity: 1 }
 };
+export const slideInTopBottomVariants: Record<string, Variant> = {
+    initial: { y: -20, opacity: 0 },
+    exit: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1 }
+};
 export const buttonVariants: Record<string, Variant> = {
     hover: { scale: 1.1, opacity: 1, y: -4 },
     tap: { scale: 0.9, opacity: 1 }

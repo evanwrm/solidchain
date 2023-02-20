@@ -73,7 +73,7 @@ const Dropzone = (props: Props) => {
                 ref={dropzoneRef}
             >
                 <div
-                    class="flex h-full w-full cursor-pointer flex-col items-center justify-center"
+                    class="flex h-full w-full cursor-pointer flex-col items-center justify-center text-base-content transition"
                     onClick={() => selectFiles(handleFileUpload)}
                 >
                     <div class="pointer-events-none flex select-none flex-col items-center justify-center">
