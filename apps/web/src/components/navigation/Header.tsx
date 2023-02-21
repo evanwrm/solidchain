@@ -1,11 +1,8 @@
 import { For } from "solid-js";
 import { A, useLocation } from "solid-start";
 import ThemeToggle from "~/components/inputs/ThemeToggle";
-
-const routes = [
-    { path: "/", name: "Home" },
-    { path: "/about", name: "About" }
-];
+import SettingsModal from "~/components/settings/SettingsModal";
+import { quickRoutes } from "~/configs/routes";
 
 const Header = () => {
     const location = useLocation();
@@ -14,7 +11,7 @@ const Header = () => {
     return (
         <nav class="flex h-16 w-full items-center justify-center bg-base-100 text-base-content shadow transition">
             <ul class="container flex items-center p-3">
-                <For each={routes}>
+                <For each={quickRoutes}>
                     {route => (
                         <li
                             class={`border-b-2 ${active(
@@ -26,7 +23,10 @@ const Header = () => {
                     )}
                 </For>
             </ul>
-            <ThemeToggle class="flex h-8 w-8" />
+            <div class="flex items-center justify-center gap-x-3">
+                <ThemeToggle class="h-6 w-6 opacity-80 hover:opacity-100" />
+                <SettingsModal class="h-6 w-6 opacity-80 hover:opacity-100" />
+            </div>
         </nav>
     );
 };

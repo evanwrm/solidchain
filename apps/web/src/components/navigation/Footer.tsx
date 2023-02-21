@@ -1,10 +1,6 @@
 import { For } from "solid-js";
 import { A } from "solid-start";
-
-const routes = [
-    { path: "/", name: "Home" },
-    { path: "/about", name: "About" }
-];
+import { quickRoutes } from "~/configs/routes";
 
 const Footer = () => {
     return (
@@ -12,7 +8,7 @@ const Footer = () => {
             <div class="h-[1px] w-full bg-gradient-to-r from-transparent via-base-content to-transparent opacity-10" />
             <div class="flex w-full flex-col items-center justify-between p-6 sm:flex-row">
                 <div class="mb-2 flex">
-                    <For each={routes}>
+                    <For each={quickRoutes}>
                         {route => (
                             <A
                                 href={route.path}

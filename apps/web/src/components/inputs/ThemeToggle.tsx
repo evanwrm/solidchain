@@ -16,7 +16,7 @@ const ThemeToggle = (props: Props) => {
     return (
         <Button.Root
             aria-label="Toggle Dark Mode"
-            class={cn("flex items-center justify-center", props.class)}
+            class={cn("flex items-center justify-center transition", props.class)}
             onClick={toggleDarkMode}
         >
             <Presence>

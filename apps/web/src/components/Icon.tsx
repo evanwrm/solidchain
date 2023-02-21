@@ -2,14 +2,19 @@ import { IconTypes } from "solid-icons";
 import { BsFiletypePdf, BsFiletypeTxt } from "solid-icons/bs";
 import {
     HiOutlineDocument,
+    HiOutlineSelector,
     HiOutlineUpload,
+    HiSolidCheck,
     HiSolidChevronDown,
     HiSolidChevronLeft,
     HiSolidChevronRight,
     HiSolidChevronUp,
     HiSolidMoon,
-    HiSolidSun
+    HiSolidPaperAirplane,
+    HiSolidSun,
+    HiSolidX
 } from "solid-icons/hi";
+import { RiCommunicationChatSettingsLine } from "solid-icons/ri";
 
 /**
  * Import only the icons needed
@@ -21,11 +26,18 @@ const Icon = {
     HiSolidMoon,
     HiSolidSun,
 
-    // Extras
-    HiOutlineUpload,
+    // Filetypes
     HiOutlineDocument,
     BsFiletypePdf,
     BsFiletypeTxt,
+
+    // Extras
+    HiOutlineUpload,
+    RiCommunicationChatSettingsLine,
+    HiSolidPaperAirplane,
+    HiSolidX,
+    HiSolidCheck,
+    HiOutlineSelector,
     HiSolidChevronUp,
     HiSolidChevronDown,
     HiSolidChevronLeft,
