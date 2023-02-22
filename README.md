@@ -2,11 +2,11 @@
 
 > Caution: currently this is just a small testbed, and should not be used or taken for a real app/reference.
 
-This is a web-based browser interface for searching with Large Language Models (LLMs). Built with [SolidJS](https://www.solidjs.com/) and [LangChain](https://langchain.readthedocs.io/en/latest/), it allows you to index a collection of documents (such as markdown files, PDFs, webpages, chat logs, etc.) and search using a dialogue based Q/A using natural language. Methods such as chain of thought (CoT) reasoning, and agent based reasoning (e.g. MRKL & ReAct) can be used depending on the use case.
+This is a web-based browser interface for searching with Large Language Models (LLMs). Built with [SolidJS](https://www.solidjs.com/) and [LangChain](https://langchain.readthedocs.io/en/latest/), it allows you to index a collection of documents (such as markdown files, PDFs, webpages, chat logs, etc.) and search using a dialogue based Q/A with natural language. Methods such as chain of thought (CoT) reasoning, and agent based reasoning (e.g. MRKL & ReAct) can be used depending on the use case.
 
-| ![Placeholder cover](apps/web/src/assets/cover.png) |     |
-| :-------------------------------------------------: | :-: |
-|                                                     |     |
+| ![Placeholder cover](apps/web/src/assets/cover.png) | ![Placeholder datasets](apps/web/src/assets/datasets.png) |
+| :-------------------------------------------------: | :-------------------------------------------------------: |
+|                                                     |                                                           |
 
 ## Installation
 
@@ -35,7 +35,7 @@ conda activate -n solidchain
 Now run the api (in dev) with:
 
 ```sh
-uvicorn src.solidchain.main:app --port 8000 --reload
+uvicorn src.solidchain.main:app --host ::1 --port 8000 --reload
 ```
 
 The documentation (OpenAPI) can be found at `localhost:8000/docs`.
@@ -79,5 +79,6 @@ docker inspect CONTAINER_ID  | grep IPAddress.
 
 Possible extensions
 
--   create a web extension which captures the users clipboard/current page as context
+-   allow for local inference: e.g. flexgen
+-   web extension: capture users clipboard/current page as context
 -   discord extension

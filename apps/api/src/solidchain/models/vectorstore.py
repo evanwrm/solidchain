@@ -1,5 +1,3 @@
-from enum import Enum
-
 from sqlalchemy import (
     Boolean,
     Column,
@@ -15,17 +13,6 @@ from sqlalchemy.orm import relationship
 
 from solidchain.database.base import Base
 from solidchain.models.mixins.dates import TimestampMixin
-
-
-class VectorStoreDB(str, Enum):
-    CHROMA = "chroma"
-    ELASTIC_SEARCH = "elastic_search"
-    FAISS = "faiss"
-    MILVUS = "milvus"
-    PINECONE = "pinecone"
-    QDRANT = "qdrant"
-    WEAVIATE = "weaviate"
-
 
 vectorstore_filestorage_association = Table(
     "vectorstore_filestorage_association",

@@ -6,8 +6,9 @@ from sqlalchemy.orm import Session
 
 from solidchain.api.dependencies import get_db
 from solidchain.models.storage import FileStorage
-from solidchain.models.vectorstore import VectorStore, VectorStoreDB
+from solidchain.schemas.vectorstore import VectorStore
 from solidchain.schemas.vectorstore import VectorStore as VectorStoreSchema
+from solidchain.schemas.vectorstore import VectorStoreDB
 from solidchain.utils.encoding import serialize_response
 from solidchain.utils.file_loaders import from_files
 from solidchain.utils.vectorstores import get_instance, save_index

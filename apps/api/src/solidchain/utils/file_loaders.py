@@ -14,7 +14,7 @@ from langchain.document_loaders import (
 )
 from langchain.text_splitter import CharacterTextSplitter
 
-from solidchain.models.vectorstore import VectorStoreDB
+from solidchain.schemas.vectorstore import VectorStoreDB
 
 
 def from_files(files: UploadFile, vectorDb: VectorStoreDB):

@@ -1,9 +1,20 @@
+from enum import Enum
 from typing import List
 
 from pydantic import BaseModel
 
 from solidchain.schemas.mixins.dates import TimestampMixin
 from solidchain.schemas.storage import FileStorage
+
+
+class VectorStoreDB(str, Enum):
+    CHROMA = "chroma"
+    ELASTIC_SEARCH = "elastic_search"
+    FAISS = "faiss"
+    MILVUS = "milvus"
+    PINECONE = "pinecone"
+    QDRANT = "qdrant"
+    WEAVIATE = "weaviate"
 
 
 # Shared properties

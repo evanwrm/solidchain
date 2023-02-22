@@ -1,25 +1,23 @@
-import { A } from "solid-start";
+import NavLink from "~/components/navigation/NavLink";
 
 export default function NotFound() {
     return (
-        <main class="mx-auto p-4 text-center text-gray-700">
-            <h1 class="max-6-xs my-16 text-6xl font-thin uppercase text-sky-700">Not Found</h1>
-            <p class="mt-8">
-                Visit{" "}
-                <a href="https://solidjs.com" target="_blank" class="text-sky-600 hover:underline">
-                    solidjs.com
-                </a>{" "}
-                to learn how to build Solid apps.
-            </p>
-            <p class="my-4">
-                <A href="/" class="text-sky-600 hover:underline">
-                    Home
-                </A>
-                {" - "}
-                <A href="/about" class="text-sky-600 hover:underline">
-                    About Page
-                </A>
-            </p>
-        </main>
+        <div class="flex min-h-screen flex-col items-center justify-between overflow-clip bg-base-100 text-base-content transition">
+            <main class="flex h-full w-full max-w-4xl flex-1 flex-col items-center justify-center">
+                <section class="flex flex-col items-center justify-center px-4">
+                    <h1 class="my-16 text-4xl font-thin uppercase sm:text-5xl">Not Found</h1>
+                    <p class="my-4 flex items-center">
+                        <span class="mr-2">Return</span>
+                        <NavLink
+                            href="/"
+                            class="text-xl opacity-80 hover:underline hover:opacity-100"
+                        >
+                            Home
+                        </NavLink>
+                        ?
+                    </p>
+                </section>
+            </main>
+        </div>
     );
 }

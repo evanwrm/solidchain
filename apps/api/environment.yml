@@ -2,14 +2,14 @@ name: solidchain
 channels:
     - defaults
     - conda-forge
-    # - pytorch
-    # - huggingface
+    - pytorch
+    - huggingface
     # - xformers
     # - fastai
     - plotly
     # - pyviz
     # - rapidsai
-    # - nvidia
+    - nvidia
 dependencies:
     # Language
     - python>=3.10
@@ -57,10 +57,10 @@ dependencies:
     # - sktime-all-extras
     # - tslearn
     # - tsfresh>=0.19.0
-    # - pytorch::pytorch>=1.10
-    # - pytorch::torchvision
+    - pytorch::pytorch>=1.13
+    - pytorch::torchvision
     # - pytorch::torchaudio
-    # - pytorch::pytorch-cuda=11.7
+    - pytorch::pytorch-cuda=11.7
     # - pytorch::cpuonly
     # - jax
     # - cuda-nvcc
@@ -69,11 +69,11 @@ dependencies:
     # - keras
     # - fastai
     # - spacy
-    # - transformers
+    - transformers
     # - diffusers
     # - timm
     # - simulate
-    # - accelerate
+    - accelerate
     # - optimum
     # - datasets
     # - tokenizers
@@ -154,7 +154,7 @@ dependencies:
 
     - pip:
           # install in editable mode
-          - -e ./apps/api
+          - -e .
 
           # Pip only packages
           # - tensorflow

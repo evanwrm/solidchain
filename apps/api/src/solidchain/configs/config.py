@@ -10,8 +10,7 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: str
 
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = [
-        "http://localhost:4173",
-        "http://localhost:5173",
+        "http://localhost:3000",
     ]  # TODO: change to real cors list
 
     @validator("BACKEND_CORS_ORIGINS", pre=True)

@@ -8,7 +8,6 @@ specifiers:
   '@solidjs/meta': ^0.28.2
   '@solidjs/router': ^0.7.0
   '@tailwindcss/typography': ^0.5.9
-  '@types/node': ^18.14.0
   '@types/nprogress': ^0.2.0
   autoprefixer: ^10.4.13
   clsx: ^1.2.1
@@ -74,7 +73,6 @@ dependencies:
 
 devDependencies:
   '@tailwindcss/typography': 0.5.9_tailwindcss@3.2.7
-  '@types/node': 18.14.0
   '@types/nprogress': 0.2.0
   autoprefixer: 10.4.13_postcss@8.4.21
   daisyui: 2.50.2_gbtt6ss3tbiz4yjtvdr6fbrj44
@@ -88,7 +86,7 @@ devDependencies:
   solid-start-vercel: 0.2.21_rwcwwxjshbsguoq5qkfx32zfgy
   tailwindcss: 3.2.7_postcss@8.4.21
   typescript: 4.9.5
-  vite: 3.2.5_@types+node@18.14.0
+  vite: 3.2.5
 
 packages:
 
@@ -5207,7 +5205,7 @@ packages:
       solid-start: 0.2.21_hfxsjca2x4cbwv4cqwois6zy4u
       terser: 5.16.4
       undici: 5.20.0
-      vite: 3.2.5_@types+node@18.14.0
+      vite: 3.2.5
     transitivePeerDependencies:
       - supports-color
 
@@ -5226,7 +5224,7 @@ packages:
       rollup: 3.17.2
       solid-start: 0.2.21_hfxsjca2x4cbwv4cqwois6zy4u
       terser: 5.16.4
-      vite: 3.2.5_@types+node@18.14.0
+      vite: 3.2.5
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -5298,7 +5296,7 @@ packages:
       solid-start-vercel: 0.2.21_rwcwwxjshbsguoq5qkfx32zfgy
       terser: 5.16.4
       undici: 5.20.0
-      vite: 3.2.5_@types+node@18.14.0
+      vite: 3.2.5
       vite-plugin-inspect: 0.7.15_rollup@3.17.2+vite@3.2.5
       vite-plugin-solid: 2.5.0_solid-js@1.6.11+vite@3.2.5
       wait-on: 6.0.1_debug@4.3.4
@@ -5760,7 +5758,7 @@ packages:
       kolorist: 1.7.0
       sirv: 2.0.2
       ufo: 1.1.0
-      vite: 3.2.5_@types+node@18.14.0
+      vite: 3.2.5
     transitivePeerDependencies:
       - rollup
       - supports-color
@@ -5777,12 +5775,12 @@ packages:
       merge-anything: 5.1.4
       solid-js: 1.6.11
       solid-refresh: 0.4.3_solid-js@1.6.11
-      vite: 3.2.5_@types+node@18.14.0
+      vite: 3.2.5
       vitefu: 0.2.4_vite@3.2.5
     transitivePeerDependencies:
       - supports-color
 
-  /vite/3.2.5_@types+node@18.14.0:
+  /vite/3.2.5:
     resolution: {integrity: sha512-4mVEpXpSOgrssFZAOmGIr85wPHKvaDAcXqxVxVRZhljkJOMZi1ibLibzjLHzJvcok8BMguLc7g1W6W/GqZbLdQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -5807,7 +5805,6 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 18.14.0
       esbuild: 0.15.18
       postcss: 8.4.21
       resolve: 1.22.1
@@ -5823,7 +5820,7 @@ packages:
       vite:
         optional: true
     dependencies:
-      vite: 3.2.5_@types+node@18.14.0
+      vite: 3.2.5
 
   /wait-on/6.0.1_debug@4.3.4:
     resolution: {integrity: sha512-zht+KASY3usTY5u2LgaNqn/Cd8MukxLGjdcZxT2ns5QzDmTFc4XoWBgC+C/na+sMRZTuVygQoMYwdcVjHnYIVw==}

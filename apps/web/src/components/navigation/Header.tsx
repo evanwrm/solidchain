@@ -11,6 +11,11 @@ const Header = () => {
     return (
         <nav class="flex h-16 w-full items-center justify-center bg-base-100 text-base-content shadow transition">
             <ul class="container flex items-center p-3">
+                <li class="text-base-content opacity-80 transition hover:opacity-100">
+                    <span class="text-lg font-light uppercase">Solid</span>
+                    <span class="text-lg font-light uppercase text-primary">Chain</span>
+                    <span class="ml-6 mr-3 border-r border-base-content/40" />
+                </li>
                 <For each={quickRoutes}>
                     {route => (
                         <li

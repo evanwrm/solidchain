@@ -3,23 +3,24 @@ import { createMemo, createSignal, For, Show } from "solid-js";
 import Icon from "~/components/Icon";
 import { cn } from "~/lib/utils/styles";
 
-interface SelectOption {
-    value: string;
+interface SelectOption<T extends string> {
+    value: T;
     label?: string;
     group?: string;
 }
 
-interface Props {
+interface Props<T extends string> {
     class?: string;
-    options: SelectOption[];
+    options: SelectOption<T>[];
+    label?: string;
     placeholder?: string;
-    onValueChange?: (value: SelectOption) => void;
+    onValueChange?: (value: SelectOption<T>) => void;
 }
 
-const SelectInput = (props: Props) => {
+const SelectInput = <T extends string = any>(props: Props<T>) => {
     const [value, setValue] = createSignal(props.options[0]?.value);
     const optionsGroups = createMemo(() => {
-        const groups: Record<string, SelectOption[]> = {};
+        const groups: Record<string, SelectOption<T>[]> = {};
         for (const option of props.options) {
             const group = option.group ?? "default";
             if (!(group in groups)) groups[group] = [];
@@ -31,13 +32,19 @@ const SelectInput = (props: Props) => {
     const handleValueChange = (value: string) => {
         const option = props.options.find(option => option.value === value);
         if (option) props.onValueChange?.(option);
-        setValue(value);
+        setValue(value as any);
     };
 
     return (
         <Select.Root value={value()} onValueChange={handleValueChange}>
+            <Show when={props.label}>
+                <Select.Label class="mb-1 text-sm opacity-80">{props.label}</Select.Label>
+            </Show>
             <Select.Trigger
-                class={cn(props.class, "flex rounded-md border border-base-300 bg-base-200 p-2")}
+                class={cn(
+                    props.class,
+                    "flex rounded-md border border-base-300 bg-base-200 p-2 text-base-content transition"
+                )}
             >
                 <Select.Value class="mr-auto px-2" placeholder={props.placeholder} />
                 <Select.Icon class="ml-1">

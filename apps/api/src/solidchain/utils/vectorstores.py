@@ -1,12 +1,10 @@
 import tempfile
-from pathlib import Path
 from urllib.parse import urlparse
 
 import langchain.vectorstores as vectorstores
-from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores.base import VectorStore
 
-from solidchain.models.vectorstore import VectorStoreDB
+from solidchain.schemas.vectorstore import VectorStoreDB
 
 
 def get_type(vectorstore: VectorStore):
