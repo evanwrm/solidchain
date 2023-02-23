@@ -49,10 +49,10 @@ def get_instance(vectorDb: VectorStoreDB):
     return vectorstore_cls
 
 
-def save_index(vectorstore: VectorStore) -> None:
+def save_index_local(vectorstore: VectorStore):
     """Save index to filestorage"""
     with tempfile.TemporaryDirectory() as tmp:
-        vectorstore.save_index(tmp)
+        vectorstore.save_local(tmp)
         directory = tmp
 
     return directory

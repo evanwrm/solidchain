@@ -1,10 +1,10 @@
 import { createContext } from "solid-js";
 import { createRouteData, Outlet, refetchRouteData, useRouteData } from "solid-start";
 import BackToTop from "~/components/navigation/BackToTop";
-import Footer from "~/components/navigation/Footer";
-import Header from "~/components/navigation/Header";
 import ProgressBar from "~/components/navigation/ProgressBar";
 import ThemeProvider from "~/components/providers/ThemeProvider";
+import Footer from "~/components/templates/Footer";
+import Header from "~/components/templates/Header";
 import { settingsFindOne } from "~/lib/services/api-v1/api";
 import { ApiSettings } from "~/lib/validators/Settings";
 
@@ -21,7 +21,7 @@ export const ApiSettingsContext = createContext<ApiSettingsSlice>([
 ]);
 
 export const routeData = () => {
-    return createRouteData(() => settingsFindOne({}), { key: ["apiSettings"] });
+    return createRouteData(() => settingsFindOne({}), { key: ["settingsFindOne"] });
 };
 
 const RootLayout = () => {
@@ -29,7 +29,7 @@ const RootLayout = () => {
 
     const apiSettingsSlice: ApiSettingsSlice = [
         settings(),
-        { refetch: () => refetchRouteData(["apiSettings"]) }
+        { refetch: () => refetchRouteData(["settingsFindOne"]) }
     ];
 
     return (

@@ -9,7 +9,7 @@ const Header = () => {
     const active = (path: string) =>
         path == location.pathname ? "border-primary" : "border-transparent hover:border-primary";
     return (
-        <nav class="flex h-16 w-full items-center justify-center bg-base-100 text-base-content shadow transition">
+        <nav class="flex h-16 w-full items-center justify-center border-b border-base-200 bg-base-100 text-base-content shadow-inner transition">
             <ul class="container flex items-center p-3">
                 <li class="text-base-content opacity-80 transition hover:opacity-100">
                     <span class="text-lg font-light uppercase">Solid</span>

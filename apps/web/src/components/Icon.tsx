@@ -3,8 +3,9 @@ import { BsFiletypePdf, BsFiletypeTxt } from "solid-icons/bs";
 import {
     HiOutlineDocument,
     HiOutlineSelector,
-    HiOutlineUpload,
     HiSolidCheck,
+    HiSolidChevronDoubleLeft,
+    HiSolidChevronDoubleRight,
     HiSolidChevronDown,
     HiSolidChevronLeft,
     HiSolidChevronRight,
@@ -15,6 +16,8 @@ import {
     HiSolidX
 } from "solid-icons/hi";
 import { RiCommunicationChatSettingsLine } from "solid-icons/ri";
+import { TiArrowSortedDown, TiArrowSortedUp, TiArrowUnsorted } from "solid-icons/ti";
+import { VsCloudUpload, VsLoading } from "solid-icons/vs";
 
 /**
  * Import only the icons needed
@@ -32,8 +35,10 @@ const Icon = {
     BsFiletypeTxt,
 
     // Extras
-    HiOutlineUpload,
     RiCommunicationChatSettingsLine,
+    TiArrowUnsorted,
+    TiArrowSortedUp,
+    TiArrowSortedDown,
     HiSolidPaperAirplane,
     HiSolidX,
     HiSolidCheck,
@@ -41,7 +46,11 @@ const Icon = {
     HiSolidChevronUp,
     HiSolidChevronDown,
     HiSolidChevronLeft,
-    HiSolidChevronRight
+    HiSolidChevronRight,
+    HiSolidChevronDoubleLeft,
+    HiSolidChevronDoubleRight,
+    VsCloudUpload,
+    VsLoading
 };
 
 const iconAliases = {

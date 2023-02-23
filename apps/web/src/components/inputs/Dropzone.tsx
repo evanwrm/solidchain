@@ -54,7 +54,6 @@ const Dropzone = (props: Props) => {
     const handleFileUpload = async (files: UploadFile[]) => {
         const rawFiles = files.map(f => f.file);
         props.onDrop?.(rawFiles);
-        // await indexCreate({ files: rawFiles });
     };
     const handleClearFiles = () => {
         clearSelectedFiles();
@@ -88,7 +87,7 @@ const Dropzone = (props: Props) => {
                                 )}
                             </For>
                         </div>
-                        <Icon.HiOutlineUpload class="h-6 w-6" />
+                        <Icon.VsCloudUpload class="h-6 w-6" />
                     </div>
                 </div>
             </div>
@@ -104,7 +103,7 @@ const Dropzone = (props: Props) => {
                             <div class="flex items-center justify-between p-2">
                                 <span>{files().length} file(s) selected.</span>
                                 <Button.Root
-                                    class="rounded-md border border-error px-2 py-1 text-error opacity-80"
+                                    class="rounded-md border border-error px-2 py-1 text-error opacity-80 transition hover:opacity-100"
                                     onClick={handleClearFiles}
                                 >
                                     Clear files

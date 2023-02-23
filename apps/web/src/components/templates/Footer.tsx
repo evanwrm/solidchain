@@ -8,7 +8,7 @@ const Footer = () => {
     const [settings] = useContext(ApiSettingsContext);
     const versions = createMemo(() => [
         { name: "python", version: settings?.versions.pythonVersion },
-        { name: "FastAPI", version: settings?.versions.fastapiVersion },
+        { name: "fastapi", version: settings?.versions.fastapiVersion },
         { name: "torch", version: settings?.versions.torchVersion },
         { name: "transformers", version: settings?.versions.transformersVersion },
         { name: "langchain", version: settings?.versions.langchainVersion },

@@ -16,6 +16,7 @@
         "@solid-primitives/upload": "^0.0.107",
         "@solidjs/meta": "^0.28.2",
         "@solidjs/router": "^0.7.0",
+        "@tanstack/solid-table": "^8.7.9",
         "clsx": "^1.2.1",
         "date-fns": "^2.29.3",
         "nprogress": "^0.2.0",

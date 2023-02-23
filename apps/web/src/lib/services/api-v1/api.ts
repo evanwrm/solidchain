@@ -1,4 +1,5 @@
 import { env } from "~/lib/env/client";
+import { Agent, AgentTool } from "~/lib/validators/Agents";
 import { ApiSettings } from "~/lib/validators/Settings";
 import { CausalGeneration } from "~/lib/validators/TextGeneration";
 import { VectorDbType, VectorStore } from "~/lib/validators/VectorStore";
@@ -31,27 +32,45 @@ export const settingsFindOne = async (
     return await api(`settings?${params.toString()}`, apiOptions);
 };
 
-export interface VectorstoreCreateRequest {
-    name: string;
-    description: string;
-    vectorDb: VectorDbType;
-    urls: string[];
-    files: File[];
+export interface VectorstoreFindManyRequest {}
+export const vectorstoreFindMany = async (
+    {}: VectorstoreFindManyRequest,
+    apiOptions?: ApiOptions
+): Promise<VectorStore[]> => {
+    const params = new URLSearchParams();
+    return await api(`vectorstores?${params.toString()}`, apiOptions);
+};
+export interface VectorstoreFindOneRequest {
+    vectorstoreId: string;
 }
-export const vectorstoreCreate = async (
-    { name, description, vectorDb, urls, files }: VectorstoreCreateRequest,
+export const vectorstoreFindOne = async (
+    { vectorstoreId }: VectorstoreFindOneRequest,
     apiOptions?: ApiOptions
 ): Promise<VectorStore> => {
     const params = new URLSearchParams();
+    return await api(`vectorstores/${vectorstoreId}?${params.toString()}`, apiOptions);
+};
+export interface VectorstoreCreateRequest {
+    name: string;
+    description?: string;
+    vectorDb?: VectorDbType;
+    urls?: string[];
+    files?: File[];
+}
+export const vectorstoreCreate = async (
+    { name, description, vectorDb, urls = [], files = [] }: VectorstoreCreateRequest,
+    apiOptions?: ApiOptions
+): Promise<VectorStore> => {
+    const params = new URLSearchParams();
+    params.append("name", name);
+    if (description !== undefined) params.append("description", description);
+    if (vectorDb !== undefined) params.append("vectorDb", vectorDb);
+    for (const url of urls) params.append("urls", url);
 
     const formData = new FormData();
-    formData.append("name", name);
-    formData.append("description", description);
-    formData.append("vectorDb", vectorDb);
-    for (const url of urls) formData.append("urls", url);
     for (const file of files) formData.append("files", file);
 
-    return await api(`upload?${params.toString()}`, {
+    return await api(`vectorstores/create?${params.toString()}`, {
         options: { method: "POST", body: formData },
         ...apiOptions
     });
@@ -61,15 +80,20 @@ export interface CausalLMGenerateRequest {
     text: string;
     modelName?: string;
     temperature?: number;
+    agent?: Agent;
+    agentPath?: string;
+    agentTools?: AgentTool[];
 }
 export const causalLMGenerate = async (
-    { modelName, temperature, text }: CausalLMGenerateRequest,
+    { text, modelName, temperature, agent, agentTools = [] }: CausalLMGenerateRequest,
     apiOptions?: ApiOptions
 ): Promise<CausalGeneration> => {
     const params = new URLSearchParams();
+    params.append("text", text);
     if (modelName !== undefined) params.append("modelName", modelName);
     if (temperature !== undefined) params.append("temperature", temperature.toString());
-    params.append("text", text);
+    if (agent !== undefined) params.append("agent", agent);
+    for (const tool of agentTools) params.append("agentTools", tool);
 
     return await api(`causal/generate?${params.toString()}`, {
         options: { method: "POST" },

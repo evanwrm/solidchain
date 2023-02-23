@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     APP_NAME: str = "SolidChain"
 
     OPENAI_API_KEY: str
+    SERPAPI_API_KEY: str
 
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = [
         "http://localhost:3000",

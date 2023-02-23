@@ -81,7 +81,7 @@ const ChatArea = (props: Props) => {
                                     isUser ? "justify-end" : "justify-start"
                                 )}
                             >
-                                <div class="flex w-full flex-col">
+                                <div class="flex max-w-full flex-col">
                                     <span class="mb-1 select-none text-xs opacity-0 transition-all group-hover:opacity-40">
                                         {formattedTimestamps()[props.messages.length - i() - 1]}
                                     </span>

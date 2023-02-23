@@ -1,4 +1,6 @@
+import tempfile
 from pathlib import Path
+from typing import List
 from urllib.parse import urlparse
 
 from fastapi import HTTPException, UploadFile
@@ -17,26 +19,21 @@ from langchain.text_splitter import CharacterTextSplitter
 from solidchain.schemas.vectorstore import VectorStoreDB
 
 
-def from_files(files: UploadFile, vectorDb: VectorStoreDB):
-    # check files to make sure they are validate filetypes
-    for file in files:
-        file_ext = Path(file.filename).suffix[1:]
-        if file_ext not in ["txt", "pdf"]:
-            raise HTTPException(
-                status_code=400, detail=f"Unsupported file format: {file_ext}"
-            )
+def from_file(file: UploadFile):
+    with tempfile.NamedTemporaryFile() as temp_file:
+        temp_file.write(file.file.read())
 
-    # Note: depending on filetype, files could contain malicious contents
-    # Attempt to safely extract text from files
-    loader = UnstructuredFileLoader(files)
+        # Note: depending on filetype, files could contain malicious contents
+        # TODO: Attempt to safely extract text from files
+        loader = UnstructuredFileLoader(temp_file.name)
 
-    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-    documents = loader.load_and_split(text_splitter)
+        text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+        documents = loader.load_and_split(text_splitter)
 
     return documents
 
 
-def from_url(url: str, vectorDb: VectorStoreDB):
+def from_url(url: str):
     parsed_url = urlparse(url)
 
     # Domain specific loaders

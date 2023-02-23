@@ -1,11 +1,11 @@
-from pydantic import BaseModel
+from pydantic import UUID4, BaseModel
 
 from solidchain.schemas.mixins.dates import TimestampMixin
 
 
 # Shared properties
 class FileStorageBase(BaseModel):
-    fileId: str
+    fileId: UUID4
     filename = str
     path = str
     provider = str

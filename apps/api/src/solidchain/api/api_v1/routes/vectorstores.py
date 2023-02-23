@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile
 from langchain.embeddings import OpenAIEmbeddings
@@ -6,17 +6,17 @@ from sqlalchemy.orm import Session
 
 from solidchain.api.dependencies import get_db
 from solidchain.models.storage import FileStorage
-from solidchain.schemas.vectorstore import VectorStore
+from solidchain.models.vectorstore import VectorStore
 from solidchain.schemas.vectorstore import VectorStore as VectorStoreSchema
 from solidchain.schemas.vectorstore import VectorStoreDB
 from solidchain.utils.encoding import serialize_response
-from solidchain.utils.file_loaders import from_files
-from solidchain.utils.vectorstores import get_instance, save_index
+from solidchain.utils.file_loaders import from_file, from_url
+from solidchain.utils.vectorstores import get_instance, save_index_local
 
 router = APIRouter()
 
 
-@router.post("", response_model=List[VectorStoreSchema])
+@router.get("", response_model=List[VectorStoreSchema])
 async def findMany(
     *,
     db: Session = Depends(get_db),
@@ -50,25 +50,26 @@ async def create(
     *,
     db: Session = Depends(get_db),
     name: str,
-    description: str,
+    description: str = "",
     vectorDb: VectorStoreDB = VectorStoreDB.FAISS,
     urls: List[str] = [],
     files: List[UploadFile] = [],
 ) -> Any:
     try:
-        file_documents = from_files(files)
-        url_documents = from_files(urls)
+        file_documents = [doc for file in files for doc in from_file(file)]
+        url_documents = [doc for url in urls for doc in from_url(url)]
 
         embeddings = OpenAIEmbeddings()
         vscls = get_instance(vectorDb)
         vectorstore = vscls.from_documents(file_documents + url_documents, embeddings)
 
-        index_filename = save_index(vectorstore)
+        index_filename = save_index_local(vectorstore)
     except NotImplementedError:
         raise HTTPException(
             status_code=400, detail="VectorStore function not implemented"
         )
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=500, detail="Internal server error")
 
     # Create VectorStore
@@ -76,9 +77,18 @@ async def create(
         name=name,
         description=description,
         vectorDb=vectorDb,
-        files=files,
+        urls=urls,
+        files=[
+            FileStorage(
+                filename=file.filename,
+                path=file.filename,
+                provider="local",
+                bucket=None,
+            )
+            for file in files
+        ],
         index=FileStorage(
-            filename=None,
+            filename=index_filename,
             path=index_filename,
             provider="local",
             bucket=None,
@@ -86,6 +96,7 @@ async def create(
     )
     db.add(vectorstore_entry)
     db.commit()
+    db.refresh(vectorstore_entry)
 
     # Encode and validate response
     return await serialize_response(
