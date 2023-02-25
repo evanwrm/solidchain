@@ -2,6 +2,7 @@ import { IconTypes } from "solid-icons";
 import { BsFiletypePdf, BsFiletypeTxt } from "solid-icons/bs";
 import {
     HiOutlineDocument,
+    HiOutlineMicrophone,
     HiOutlineSelector,
     HiSolidCheck,
     HiSolidChevronDoubleLeft,
@@ -49,6 +50,7 @@ const Icon = {
     HiSolidChevronRight,
     HiSolidChevronDoubleLeft,
     HiSolidChevronDoubleRight,
+    HiOutlineMicrophone,
     VsCloudUpload,
     VsLoading
 };

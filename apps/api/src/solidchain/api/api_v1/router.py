@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from solidchain.api.api_v1.routes import causal, settings, system, vectorstores
+from solidchain.api.api_v1.routes import asr, causal, settings, system, vectorstores
 
 api_router = APIRouter()
 
@@ -12,3 +12,4 @@ api_router.include_router(
     vectorstores.router, prefix="/vectorstores", tags=["vectorstores"]
 )
 api_router.include_router(causal.router, prefix="/causal", tags=["generate"])
+api_router.include_router(asr.router, prefix="/asr", tags=["asr"])

@@ -80,5 +80,10 @@ docker inspect CONTAINER_ID  | grep IPAddress.
 Possible extensions
 
 -   allow for local inference: e.g. flexgen
--   web extension: capture users clipboard/current page as context
+    -   llama/opt
+-   web extension:
+    -   capture users clipboard/current page as context
+    -   extension bookmarking (upload html page to collection)
 -   discord extension
+-   llm call visualization (tracing)
+-   starter examples (email, mermaid graphs, terminal autocompletion)

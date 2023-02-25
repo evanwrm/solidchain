@@ -1,7 +1,10 @@
 import { Button, TextField } from "@kobalte/core";
 import { formatDistance } from "date-fns";
 import { createMemo, createSignal, For, Match, mergeProps, Show, Switch } from "solid-js";
+import { createRouteAction } from "solid-start";
+import AudioInput from "~/components/inputs/Audio";
 import Markdown from "~/components/mdx/Markdown";
+import { asrTranscribe, ASRTranscribeRequest } from "~/lib/services/api-v1/api";
 import { cn } from "~/lib/utils/styles";
 import { ChatMessage } from "~/lib/validators/ChatMessage";
 import Icon from "../Icon";
@@ -12,6 +15,7 @@ interface Props {
     chatContainerClass?: string;
     messages: ChatMessage[];
     displayType?: ChatDisplayType;
+    allowAudioInput?: boolean;
     refreshInterval?: number;
     disabled?: boolean;
     onMessage?: (message: ChatMessage) => void;
@@ -28,11 +32,23 @@ const ChatArea = (props: Props) => {
         props.messages.map(message => formatDistance(new Date(message.createdAt), lastUpdated()))
     );
 
+    const [_transcribing, transcribe] = createRouteAction(
+        async (formData: ASRTranscribeRequest) => {
+            const response = asrTranscribe(formData);
+            return response;
+        }
+    );
+
     // rerender every 30 seconds
     setInterval(() => {
         setLastUpdated(new Date());
     }, props.refreshInterval);
 
+    const handleAudio = async (file: File) => {
+        transcribe({ file }).then(response => {
+            setValue(response.text);
+        });
+    };
     const handleEnter = () => {
         const content = value().trim();
         if (!content) return;
@@ -101,10 +117,11 @@ const ChatArea = (props: Props) => {
                     }}
                 </For>
             </div>
+            <AudioInput onValueChange={handleAudio} />
             <TextField.Root class="relative" value={value()} onValueChange={setValue}>
                 <TextField.TextArea
                     class={cn(
-                        "flex h-full w-full resize-none text-base-content transition placeholder:text-base-content/80",
+                        "flex h-full w-full select-none resize-none text-base-content transition placeholder:text-base-content/80",
                         "rounded-md bg-base-200 p-2 pr-10 outline-none ring-base-300 ring-offset-1 ring-offset-base-100 focus:ring-2 focus:ring-offset-2",
                         "disabled:cursor-not-allowed disabled:opacity-50"
                     )}

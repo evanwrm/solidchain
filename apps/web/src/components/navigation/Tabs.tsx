@@ -1,21 +1,19 @@
 import { Tabs } from "@kobalte/core";
-import { children, For, JSX } from "solid-js";
+import { For, JSX } from "solid-js";
 import { cn } from "~/lib/utils/styles";
 
 interface TabItem {
     value: string;
     label?: string;
+    content: () => JSX.Element;
 }
 
 interface Props {
     class?: string;
     tabs: TabItem[];
-    children: JSX.Element;
 }
 
 const NavTabs = (props: Props) => {
-    const resolvedChildren = children(() => props.children);
-
     return (
         <Tabs.Root class={cn(props.class)}>
             <Tabs.List class="relative inline-flex items-center justify-start border-b border-base-300">
@@ -31,10 +29,10 @@ const NavTabs = (props: Props) => {
                 </For>
                 <Tabs.Indicator class="absolute -bottom-px h-px bg-secondary transition" />
             </Tabs.List>
-            <For each={resolvedChildren.toArray()}>
-                {(child, i) => (
-                    <Tabs.Content class="h-full w-full" value={props.tabs[i()].value}>
-                        {child}
+            <For each={props.tabs}>
+                {tab => (
+                    <Tabs.Content class="grid h-full w-full" value={tab.value}>
+                        <tab.content />
                     </Tabs.Content>
                 )}
             </For>

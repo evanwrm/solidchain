@@ -10,7 +10,7 @@ from langchain.chains.summarize import load_summarize_chain
 from solidchain.configs.config import settings
 from solidchain.schemas.agents import Agent, AgentTool
 from solidchain.schemas.chains import SummarizeChainType
-from solidchain.schemas.text_generation import CausalGeneration, CausalModels
+from solidchain.schemas.text_generation import CausalGeneration, CausalModel
 
 router = APIRouter()
 
@@ -19,7 +19,7 @@ router = APIRouter()
 def generate(
     *,
     text: str,
-    modelName: CausalModels = "text-curie-001",
+    modelName: CausalModel = "text-curie-001",
     temperature: float = 0.7,
 ) -> Any:
     llm = OpenAI(
@@ -30,7 +30,7 @@ def generate(
 
     output = llm(text)
     generation = CausalGeneration(
-        content=output.strip(),
+        text=output.strip(),
     )
     return generation
 
@@ -39,7 +39,7 @@ def generate(
 def generate(
     *,
     text: str,
-    modelName: CausalModels = "text-curie-001",
+    modelName: CausalModel = "text-curie-001",
     temperature: float = 0.7,
     agent: Optional[Agent] = "zero-shot-react-description",
     agentPath: Optional[str] = None,
@@ -69,7 +69,7 @@ def generate(
         output = llm(text)
 
     generation = CausalGeneration(
-        content=output.strip(),
+        text=output.strip(),
     )
     return generation
 
@@ -78,7 +78,7 @@ def generate(
 def generate(
     *,
     text: str,
-    modelName: CausalModels = "text-curie-001",
+    modelName: CausalModel = "text-curie-001",
     temperature: float = 0.7,
     chainType: SummarizeChainType = "stuff",
 ) -> Any:
@@ -91,7 +91,7 @@ def generate(
     output = chain.run(text)
 
     generation = CausalGeneration(
-        content=output.strip(),
+        text=output.strip(),
     )
     return generation
 
@@ -100,7 +100,7 @@ def generate(
 def generate(
     *,
     text: str,
-    modelName: CausalModels = "text-curie-001",
+    modelName: CausalModel = "text-curie-001",
     temperature: float = 0.7,
 ) -> Any:
     llm = OpenAI(
@@ -112,6 +112,6 @@ def generate(
     output = chain.run(text)
 
     generation = CausalGeneration(
-        content=output.strip(),
+        text=output.strip(),
     )
     return generation

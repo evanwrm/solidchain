@@ -1,7 +1,7 @@
 import { env } from "~/lib/env/client";
 
 export const quickRoutes = [
-    { path: "/", name: "Home" },
+    { path: "/", name: "Playground" },
     { path: "/datasets", name: "Datasets" }
 ];
 export const footerRoutes = [

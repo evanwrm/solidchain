@@ -1,5 +1,7 @@
 import { env } from "~/lib/env/client";
 import { Agent, AgentTool } from "~/lib/validators/Agents";
+import { AudioTranscription } from "~/lib/validators/audioTranscription";
+import { SummarizeChainType } from "~/lib/validators/Chains";
 import { ApiSettings } from "~/lib/validators/Settings";
 import { CausalGeneration } from "~/lib/validators/TextGeneration";
 import { VectorDbType, VectorStore } from "~/lib/validators/VectorStore";
@@ -80,12 +82,31 @@ export interface CausalLMGenerateRequest {
     text: string;
     modelName?: string;
     temperature?: number;
+}
+export const causalLMGenerate = async (
+    { text, modelName, temperature }: CausalLMGenerateRequest,
+    apiOptions?: ApiOptions
+): Promise<CausalGeneration> => {
+    const params = new URLSearchParams();
+    params.append("text", text);
+    if (modelName !== undefined) params.append("modelName", modelName);
+    if (temperature !== undefined) params.append("temperature", temperature.toString());
+
+    return await api(`causal/generate?${params.toString()}`, {
+        options: { method: "POST" },
+        ...apiOptions
+    });
+};
+export interface CausalLMQARequest {
+    text: string;
+    modelName?: string;
+    temperature?: number;
     agent?: Agent;
     agentPath?: string;
     agentTools?: AgentTool[];
 }
-export const causalLMGenerate = async (
-    { text, modelName, temperature, agent, agentTools = [] }: CausalLMGenerateRequest,
+export const causalLMQA = async (
+    { text, modelName, temperature, agent, agentPath, agentTools = [] }: CausalLMQARequest,
     apiOptions?: ApiOptions
 ): Promise<CausalGeneration> => {
     const params = new URLSearchParams();
@@ -93,10 +114,69 @@ export const causalLMGenerate = async (
     if (modelName !== undefined) params.append("modelName", modelName);
     if (temperature !== undefined) params.append("temperature", temperature.toString());
     if (agent !== undefined) params.append("agent", agent);
+    if (agentPath !== undefined) params.append("agentPath", agentPath);
     for (const tool of agentTools) params.append("agentTools", tool);
 
-    return await api(`causal/generate?${params.toString()}`, {
+    return await api(`causal/qa?${params.toString()}`, {
         options: { method: "POST" },
+        ...apiOptions
+    });
+};
+export interface CausalLMSummarizeRequest {
+    text: string;
+    modelName?: string;
+    temperature?: number;
+    chainType?: SummarizeChainType;
+}
+export const causalLMSummarize = async (
+    { text, modelName, temperature, chainType }: CausalLMSummarizeRequest,
+    apiOptions?: ApiOptions
+): Promise<CausalGeneration> => {
+    const params = new URLSearchParams();
+    params.append("text", text);
+    if (modelName !== undefined) params.append("modelName", modelName);
+    if (temperature !== undefined) params.append("temperature", temperature.toString());
+    if (chainType !== undefined) params.append("chainType", chainType);
+
+    return await api(`causal/qa?${params.toString()}`, {
+        options: { method: "POST" },
+        ...apiOptions
+    });
+};
+export interface CausalLMConversationalRequest {
+    text: string;
+    modelName?: string;
+    temperature?: number;
+}
+export const causalLMConversational = async (
+    { text, modelName, temperature }: CausalLMConversationalRequest,
+    apiOptions?: ApiOptions
+): Promise<CausalGeneration> => {
+    const params = new URLSearchParams();
+    params.append("text", text);
+    if (modelName !== undefined) params.append("modelName", modelName);
+    if (temperature !== undefined) params.append("temperature", temperature.toString());
+
+    return await api(`causal/conversational?${params.toString()}`, {
+        options: { method: "POST" },
+        ...apiOptions
+    });
+};
+
+export interface ASRTranscribeRequest {
+    file: File;
+}
+export const asrTranscribe = async (
+    { file }: ASRTranscribeRequest,
+    apiOptions?: ApiOptions
+): Promise<AudioTranscription> => {
+    const params = new URLSearchParams();
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    return await api(`asr/transcribe?${params.toString()}`, {
+        options: { method: "POST", body: formData },
         ...apiOptions
     });
 };

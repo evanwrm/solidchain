@@ -70,7 +70,6 @@ dependencies:
     # - fastai
     # - spacy
     - tesseract
-    # - openai-whisper
     - transformers
     # - diffusers
     # - timm
@@ -124,6 +123,8 @@ dependencies:
     # - gdal<4.5 #They removed drivers requried by fiona for geopandas.
     # - fiona
     # - safetensors
+    # - pyaudio
+    - pydub
     - libmagic
 
     # Webservers
@@ -136,7 +137,7 @@ dependencies:
     # Databases / queues
     - psycopg2-binary
     # - psycopg2 # build whl file (aarch64 requirement - host needs libpq-dev)
-    - sqlalchemy
+    - sqlalchemy>=2.0
     - alembic
     # - celery>=5.0
     - faiss-cpu
@@ -163,6 +164,7 @@ dependencies:
           # - tensorflow
           # - tensorflow-probability
           # - flwr[simulation]
+          #  - openai-whisper
           - langchain
           # - llama-index
           - openai
@@ -177,6 +179,7 @@ dependencies:
     # Environment
     - jupyterlab
     - ipython
+    - ipywidgets
 
     # Quality
     - black>=22

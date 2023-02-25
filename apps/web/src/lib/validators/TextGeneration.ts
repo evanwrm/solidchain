@@ -13,6 +13,6 @@ export const causalModelValidator = z.enum([
 export type CausalModel = z.infer<typeof causalModelValidator>;
 
 export const causalGenerationValidator = z.object({
-    content: z.string()
+    text: z.string()
 });
 export type CausalGeneration = z.infer<typeof causalGenerationValidator>;

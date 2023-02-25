@@ -12,6 +12,7 @@ from langchain.document_loaders import (
     IMSDbLoader,
     OnlinePDFLoader,
     UnstructuredFileLoader,
+    UnstructuredURLLoader,
     YoutubeLoader,
 )
 from langchain.text_splitter import CharacterTextSplitter
@@ -56,7 +57,7 @@ def from_url(url: str):
             case "pdf":
                 loader = OnlinePDFLoader(url)
             case _:
-                raise NotImplementedError
+                loader = UnstructuredURLLoader(url)
 
     text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
     documents = loader.load_and_split(text_splitter)
