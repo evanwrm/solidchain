@@ -14,3 +14,7 @@ class CausalModel(str, Enum):
 
 class CausalGeneration(BaseModel):
     text: str
+
+
+class StreamingCausalGeneration(BaseModel):
+    text: str

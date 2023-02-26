@@ -16,3 +16,8 @@ export const causalGenerationValidator = z.object({
     text: z.string()
 });
 export type CausalGeneration = z.infer<typeof causalGenerationValidator>;
+
+export const streamingCausalGenerationValidator = z.object({
+    text: z.string()
+});
+export type StreamingCausalGeneration = z.infer<typeof streamingCausalGenerationValidator>;

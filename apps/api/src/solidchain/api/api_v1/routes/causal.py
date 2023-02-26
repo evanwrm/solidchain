@@ -2,6 +2,7 @@ from importlib.metadata import version
 from typing import Any, List, Optional
 
 from fastapi import APIRouter
+from fastapi.responses import StreamingResponse
 from langchain import ConversationChain, OpenAI
 from langchain.agents import initialize_agent, load_tools
 from langchain.chains.conversation.memory import ConversationBufferMemory
@@ -10,7 +11,12 @@ from langchain.chains.summarize import load_summarize_chain
 from solidchain.configs.config import settings
 from solidchain.schemas.agents import Agent, AgentTool
 from solidchain.schemas.chains import SummarizeChainType
-from solidchain.schemas.text_generation import CausalGeneration, CausalModel
+from solidchain.schemas.text_generation import (
+    CausalGeneration,
+    CausalModel,
+    StreamingCausalGeneration,
+)
+from solidchain.utils.encoding import serialize_response
 
 router = APIRouter()
 
@@ -21,22 +27,35 @@ def generate(
     text: str,
     modelName: CausalModel = "text-curie-001",
     temperature: float = 0.7,
+    streaming: bool = False,
 ) -> Any:
     llm = OpenAI(
         model_name=modelName,
         temperature=temperature,
+        streaming=streaming,
         openai_api_key=settings.OPENAI_API_KEY,
     )
 
-    output = llm(text)
-    generation = CausalGeneration(
-        text=output.strip(),
-    )
-    return generation
+    if streaming:
+
+        def streaming_response():
+            for output in llm.stream(text):
+                generation = StreamingCausalGeneration(
+                    text=output["choices"][0]["text"]
+                )
+                yield generation.json()
+
+        return StreamingResponse(streaming_response())
+    else:
+        output = llm(text)
+        generation = CausalGeneration(
+            text=output.strip(),
+        )
+        return generation
 
 
 @router.post("/qa", response_model=CausalGeneration)
-def generate(
+def qa(
     *,
     text: str,
     modelName: CausalModel = "text-curie-001",
@@ -75,7 +94,7 @@ def generate(
 
 
 @router.post("/summarize", response_model=CausalGeneration)
-def generate(
+def summarize(
     *,
     text: str,
     modelName: CausalModel = "text-curie-001",
@@ -97,7 +116,7 @@ def generate(
 
 
 @router.post("/conversational", response_model=CausalGeneration)
-def generate(
+def conversational(
     *,
     text: str,
     modelName: CausalModel = "text-curie-001",

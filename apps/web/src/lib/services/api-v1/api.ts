@@ -8,9 +8,16 @@ import { VectorDbType, VectorStore } from "~/lib/validators/VectorStore";
 
 interface ApiOptions {
     fetcher?: (info: RequestInfo, init?: RequestInit) => Promise<Response>;
+    streamCallback?: (
+        streamResult: { value: Uint8Array | undefined; done: boolean },
+        chunks: any[]
+    ) => unknown[];
     options?: RequestInit;
 }
-export const api = async (resource: string, { fetcher = fetch, options = {} }: ApiOptions = {}) => {
+export const api = async (
+    resource: string,
+    { fetcher = fetch, streamCallback, options = {} }: ApiOptions = {}
+) => {
     const host = env.VITE_API_ENDPOINT;
     const res = await fetcher(`${host}/${resource}`, {
         method: "GET",
@@ -20,9 +27,21 @@ export const api = async (resource: string, { fetcher = fetch, options = {} }: A
             ...(options.headers ?? {})
         }
     });
-    return res.headers.get("Content-Type")?.includes("application/json")
-        ? await res.json()
-        : await res.text();
+    const contentType = res.headers.get("Content-Type");
+    if (streamCallback) {
+        const reader = res.body?.getReader();
+        if (reader) {
+            const chunks: unknown[][] = [];
+            while (true) {
+                const { done, value } = await reader.read();
+                const mappedValue = streamCallback({ value, done }, chunks.flat(2));
+                if (mappedValue !== undefined) chunks.push(mappedValue);
+                if (done) break;
+            }
+            return chunks.flat(2);
+        }
+    }
+    return contentType?.includes("application/json") ? await res.json() : await res.text();
 };
 
 export interface SettingsFindOneRequest {}
@@ -82,15 +101,17 @@ export interface CausalLMGenerateRequest {
     text: string;
     modelName?: string;
     temperature?: number;
+    streaming?: boolean;
 }
 export const causalLMGenerate = async (
-    { text, modelName, temperature }: CausalLMGenerateRequest,
+    { text, modelName, temperature, streaming }: CausalLMGenerateRequest,
     apiOptions?: ApiOptions
 ): Promise<CausalGeneration> => {
     const params = new URLSearchParams();
     params.append("text", text);
     if (modelName !== undefined) params.append("modelName", modelName);
     if (temperature !== undefined) params.append("temperature", temperature.toString());
+    if (streaming !== undefined) params.append("streaming", streaming.toString());
 
     return await api(`causal/generate?${params.toString()}`, {
         options: { method: "POST" },

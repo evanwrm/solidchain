@@ -101,12 +101,18 @@ const ChatArea = (props: Props) => {
                                     <span class="mb-1 select-none text-xs opacity-0 transition-all group-hover:opacity-40">
                                         {formattedTimestamps()[props.messages.length - i() - 1]}
                                     </span>
-                                    <Switch>
-                                        <Match when={props.displayType === "raw"}>
+                                    <Switch
+                                        fallback={
                                             <p class={cn(messageClass, "whitespace-pre-wrap")}>
                                                 {message.content}
                                             </p>
-                                        </Match>
+                                        }
+                                    >
+                                        {/* <Match when={props.displayType === "raw"}>
+                                            <p class={cn(messageClass, "whitespace-pre-wrap")}>
+                                                {message.content}
+                                            </p>
+                                        </Match> */}
                                         <Match when={props.displayType === "markdown"}>
                                             <Markdown class={messageClass} text={message.content} />
                                         </Match>

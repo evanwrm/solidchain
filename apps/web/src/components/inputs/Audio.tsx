@@ -3,7 +3,7 @@ import { createMicrophones } from "@solid-primitives/devices";
 import { IMediaRecorder } from "extendable-media-recorder";
 import { createEffect, createSignal } from "solid-js";
 import Icon from "~/components/Icon";
-import { blobToDataUrl } from "~/lib/utils/audio";
+import { blobToDataUrl } from "~/lib/utils/encoding";
 import { cn } from "~/lib/utils/styles";
 
 interface Props {

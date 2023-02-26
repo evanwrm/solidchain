@@ -9,42 +9,39 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import remarkParse from "remark-parse/lib";
 import remarkRehype from "remark-rehype";
-import { createEffect } from "solid-js";
+import { createResource, Suspense } from "solid-js";
 import { unified } from "unified";
 import "~/styles/prism.css";
 
+const renderMarkdown = async (text: string) => {
+    const vfile = await unified()
+        .use(remarkParse) // parse
+        .use(remarkGfm)
+        .use(remarkMath)
+        .use(remarkRehype) // convert
+        .use(rehypeSlug)
+        .use(rehypeAutolinkHeadings)
+        .use(rehypeKatex)
+        .use(rehypeCodeTitles)
+        .use(rehypePrism)
+        // .use(rehypeSanitize)
+        .use(rehypeStringify) // compile
+        .process(text);
+    return String(vfile?.value);
+};
 interface Props {
     text: string;
     class?: string;
 }
 
 const Markdown = (props: Props) => {
-    let ref: HTMLElement | undefined = undefined;
+    const [html] = createResource(props.text, renderMarkdown);
 
-    createEffect(() => {
-        unified()
-            .use(remarkParse) // parse
-            .use(remarkGfm)
-            .use(remarkMath)
-            .use(remarkRehype) // convert
-            .use(rehypeSlug)
-            .use(rehypeAutolinkHeadings)
-            .use(rehypeKatex)
-            .use(rehypeCodeTitles)
-            .use(rehypePrism)
-            // .use(rehypeSanitize)
-            .use(rehypeStringify) // compile
-            .process(props.text, (err, file) => {
-                if (err) console.error(err);
-                setTimeout(() => {
-                    if (ref) {
-                        ref.innerHTML = String(file?.value);
-                    }
-                });
-            });
-    });
-
-    return <div class={props.class} ref={ref} />;
+    return (
+        <Suspense>
+            <div class={props.class} innerHTML={html()} />
+        </Suspense>
+    );
 };
 
 export default Markdown;

@@ -6,9 +6,14 @@ import ChatArea, { ChatDisplayType } from "~/components/inputs/ChatArea";
 import SelectInput from "~/components/inputs/Select";
 import Slider from "~/components/inputs/Slider";
 import { causalLMGenerate, CausalLMGenerateRequest } from "~/lib/services/api-v1/api";
+import { Uint8ArrayToJSONArray } from "~/lib/utils/encoding";
 import { createStorageSignal } from "~/lib/utils/storage";
 import { ChatMessage } from "~/lib/validators/ChatMessage";
-import { CausalModel, causalModelValidator } from "~/lib/validators/TextGeneration";
+import {
+    CausalModel,
+    causalModelValidator,
+    StreamingCausalGeneration
+} from "~/lib/validators/TextGeneration";
 
 const [messages, setMessages] = createStore<ChatMessage[]>([]);
 const GenerationTab = () => {
@@ -26,7 +31,39 @@ const GenerationTab = () => {
     );
 
     const [submitting, generate] = createRouteAction(async (formData: CausalLMGenerateRequest) => {
-        const response = causalLMGenerate(formData);
+        const response = causalLMGenerate(formData, {
+            streamCallback: ({ value, done }, chunks: StreamingCausalGeneration[]) => {
+                const currentText = chunks.map(chunk => chunk.text).join("");
+                if (!done && value) {
+                    const streamChunk = Uint8ArrayToJSONArray<StreamingCausalGeneration>(value);
+                    if (streamChunk) {
+                        setMessages(messages => [
+                            ...messages.filter(message => message.userId !== "bot-streaming"),
+                            {
+                                content: (
+                                    currentText + streamChunk.map(chunk => chunk.text).join("")
+                                ).trim(),
+                                userId: "bot-streaming",
+                                createdAt: new Date().toISOString(),
+                                updatedAt: new Date().toISOString()
+                            }
+                        ]);
+                        return streamChunk;
+                    }
+                } else if (done) {
+                    setMessages(messages => [
+                        ...messages.filter(message => message.userId !== "bot-streaming"),
+                        {
+                            content: currentText.trim(),
+                            userId: "bot",
+                            createdAt: new Date().toISOString(),
+                            updatedAt: new Date().toISOString()
+                        }
+                    ]);
+                }
+                return [];
+            }
+        });
         return response;
     });
 
@@ -36,17 +73,8 @@ const GenerationTab = () => {
         generate({
             text: message.content,
             modelName: model(),
-            temperature: temperature()
-        }).then(response => {
-            setMessages(messages => [
-                ...messages,
-                {
-                    content: response.text,
-                    userId: "bot",
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
-                }
-            ]);
+            temperature: temperature(),
+            streaming: true
         });
     };
 
