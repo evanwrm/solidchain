@@ -16,6 +16,9 @@ interface Props {
     messages: ChatMessage[];
     displayType?: ChatDisplayType;
     allowAudioInput?: boolean;
+    audioInputPosition?: "above" | "inline";
+    characterCounter?: boolean;
+    characterLimit?: number;
     refreshInterval?: number;
     disabled?: boolean;
     onMessage?: (message: ChatMessage) => void;
@@ -23,7 +26,15 @@ interface Props {
 
 const ChatArea = (props: Props) => {
     props = mergeProps(
-        { displayType: "raw" as ChatDisplayType, refreshInterval: 30 * 1000, disabled: false },
+        {
+            displayType: "raw" as any,
+            allowAudioInput: true,
+            audioInputPosition: "above" as any,
+            characterCounter: true,
+            characterLimit: 2048,
+            refreshInterval: 30 * 1000,
+            disabled: false
+        },
         props
     );
     const [value, setValue] = createSignal("");
@@ -123,13 +134,32 @@ const ChatArea = (props: Props) => {
                     }}
                 </For>
             </div>
-            <AudioInput onValueChange={handleAudio} />
+            <Show when={props.allowAudioInput && props.audioInputPosition === "above"}>
+                <div>
+                    <AudioInput
+                        class="flex select-none items-center justify-center rounded-md px-2 pb-2 opacity-80 transition hover:opacity-100"
+                        onValueChange={handleAudio}
+                    />
+                </div>
+            </Show>
             <TextField.Root class="relative" value={value()} onValueChange={setValue}>
+                <Icon.HiOutlineChatAlt class="absolute inset-y-0 left-2 my-auto h-6 w-6 text-base-content opacity-80 transition" />
+                <Show when={props.allowAudioInput && props.audioInputPosition === "inline"}>
+                    <AudioInput
+                        class="absolute inset-y-0 left-10 my-auto text-base-content opacity-80 transition hover:opacity-100"
+                        iconClass="h-6 w-6"
+                        label=""
+                        onValueChange={handleAudio}
+                    />
+                </Show>
                 <TextField.TextArea
                     class={cn(
                         "flex h-full w-full select-none resize-none text-base-content transition placeholder:text-base-content/80",
-                        "rounded-md bg-base-200 p-2 pr-10 outline-none ring-base-300 ring-offset-1 ring-offset-base-100 focus:ring-2 focus:ring-offset-2",
-                        "disabled:cursor-not-allowed disabled:opacity-50"
+                        "rounded-md bg-base-200 p-2 outline-none ring-base-300 ring-offset-1 ring-offset-base-100 focus:ring-2 focus:ring-offset-2",
+                        "disabled:cursor-not-allowed disabled:opacity-50",
+                        props.allowAudioInput && props.audioInputPosition === "inline"
+                            ? "pl-[4.5rem]"
+                            : "px-10"
                     )}
                     onKeyDown={handleKeyDown}
                     placeholder="Chat..."
@@ -144,6 +174,11 @@ const ChatArea = (props: Props) => {
                     <Icon.HiSolidPaperAirplane class="h-6 w-6 rotate-90" />
                 </Button.Root>
             </TextField.Root>
+            <Show when={props.characterCounter}>
+                <span class="px-2 pt-1 opacity-40">
+                    {value().length} / {props.characterLimit}
+                </span>
+            </Show>
         </div>
     );
 };

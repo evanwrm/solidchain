@@ -1,6 +1,7 @@
 import { IconTypes } from "solid-icons";
 import { BsFiletypePdf, BsFiletypeTxt } from "solid-icons/bs";
 import {
+    HiOutlineChatAlt,
     HiOutlineDocument,
     HiOutlineMicrophone,
     HiOutlineSelector,
@@ -37,10 +38,11 @@ const Icon = {
 
     // Extras
     RiCommunicationChatSettingsLine,
+    HiOutlineChatAlt,
+    HiSolidPaperAirplane,
     TiArrowUnsorted,
     TiArrowSortedUp,
     TiArrowSortedDown,
-    HiSolidPaperAirplane,
     HiSolidX,
     HiSolidCheck,
     HiOutlineSelector,

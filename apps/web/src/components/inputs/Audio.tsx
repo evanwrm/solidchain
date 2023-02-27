@@ -1,17 +1,21 @@
 import { Button } from "@kobalte/core";
 import { createMicrophones } from "@solid-primitives/devices";
 import { IMediaRecorder } from "extendable-media-recorder";
-import { createEffect, createSignal } from "solid-js";
+import { createEffect, createSignal, mergeProps, Show } from "solid-js";
 import Icon from "~/components/Icon";
 import { blobToDataUrl } from "~/lib/utils/encoding";
 import { cn } from "~/lib/utils/styles";
 
 interface Props {
     class?: string;
+    iconClass?: string;
+    label?: string;
     onValueChange?: (value: File) => void;
 }
 
 const AudioInput = (props: Props) => {
+    props = mergeProps({ label: "Record Microphone" }, props);
+
     const microphones = createMicrophones();
     const [stream, setStream] = createSignal<MediaStream | undefined>(undefined);
     const [recorder, setRecorder] = createSignal<IMediaRecorder | undefined>(undefined);
@@ -66,19 +70,18 @@ const AudioInput = (props: Props) => {
     };
 
     return (
-        <div class={cn(props.class)}>
+        <>
             <Button.Root
-                class={cn(
-                    "flex select-none items-center justify-center rounded-md px-2 pb-2 opacity-80 transition hover:opacity-100",
-                    recording() ? "text-error" : "text-base-content"
-                )}
+                class={cn(props.class, recording() ? "text-error" : "text-base-content")}
                 onClick={toggleRecording}
             >
-                <span class="mr-1 text-sm">Record Microphone</span>
-                <Icon.HiOutlineMicrophone class="h-4 w-4" />
+                <Show when={props.label}>
+                    <span class="mr-1 text-sm">{props.label}</span>
+                </Show>
+                <Icon.HiOutlineMicrophone class={cn(props.iconClass, "h-4 w-4")} />
             </Button.Root>
             <audio class="mt-1" src={audioUrl()} preload="metadata" controls={false} />
-        </div>
+        </>
     );
 };
 
