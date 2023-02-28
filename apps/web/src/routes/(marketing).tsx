@@ -35,7 +35,7 @@ const RootLayout = () => {
     return (
         <ApiSettingsContext.Provider value={apiSettingsSlice}>
             <ThemeProvider>
-                <div class="flex min-h-screen flex-col items-center justify-between overflow-clip bg-base-100 text-base-content transition">
+                <div class="flex max-h-screen min-h-screen flex-col items-center justify-between overflow-clip bg-base-100 text-base-content transition">
                     <ProgressBar options={{ showSpinner: false, trickleSpeed: 300 }} />
                     <Header />
                     <Outlet />

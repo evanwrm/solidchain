@@ -20,7 +20,7 @@ const Footer = () => {
     ]);
 
     return (
-        <div class="container mt-4 flex w-full flex-col items-center justify-center">
+        <div class="container flex w-full flex-col items-center justify-center">
             <div class="h-[1px] w-full bg-gradient-to-r from-transparent via-base-content to-transparent opacity-10" />
             <div class="flex w-full flex-col items-center justify-between p-6 sm:flex-row">
                 <div class="flex items-center justify-center">

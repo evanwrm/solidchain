@@ -3,6 +3,7 @@ import { BsFiletypePdf, BsFiletypeTxt } from "solid-icons/bs";
 import {
     HiOutlineChatAlt,
     HiOutlineDocument,
+    HiOutlineLightBulb,
     HiOutlineMicrophone,
     HiOutlineSelector,
     HiSolidCheck,
@@ -40,6 +41,7 @@ const Icon = {
     RiCommunicationChatSettingsLine,
     HiOutlineChatAlt,
     HiSolidPaperAirplane,
+    HiOutlineLightBulb,
     TiArrowUnsorted,
     TiArrowSortedUp,
     TiArrowSortedDown,

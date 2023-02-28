@@ -27,11 +27,13 @@ def generate(
     text: str,
     modelName: CausalModel = "text-curie-001",
     temperature: float = 0.7,
+    maxTokens: int = 1024,
     streaming: bool = False,
 ) -> Any:
     llm = OpenAI(
         model_name=modelName,
         temperature=temperature,
+        max_tokens=maxTokens,
         streaming=streaming,
         openai_api_key=settings.OPENAI_API_KEY,
     )
@@ -60,6 +62,7 @@ def qa(
     text: str,
     modelName: CausalModel = "text-curie-001",
     temperature: float = 0.7,
+    maxTokens: int = 1024,
     agent: Optional[Agent] = "zero-shot-react-description",
     agentPath: Optional[str] = None,
     agentTools: Optional[List[AgentTool]] = ["serpapi", "llm-math"],
@@ -67,6 +70,7 @@ def qa(
     llm = OpenAI(
         model_name=modelName,
         temperature=temperature,
+        max_tokens=maxTokens,
         openai_api_key=settings.OPENAI_API_KEY,
     )
 
@@ -99,11 +103,13 @@ def summarize(
     text: str,
     modelName: CausalModel = "text-curie-001",
     temperature: float = 0.7,
+    maxTokens: int = 1024,
     chainType: SummarizeChainType = "stuff",
 ) -> Any:
     llm = OpenAI(
         model_name=modelName,
         temperature=temperature,
+        max_tokens=maxTokens,
         openai_api_key=settings.OPENAI_API_KEY,
     )
     chain = load_summarize_chain(llm=llm, chain_type=chainType)
@@ -121,10 +127,12 @@ def conversational(
     text: str,
     modelName: CausalModel = "text-curie-001",
     temperature: float = 0.7,
+    maxTokens: int = 1024,
 ) -> Any:
     llm = OpenAI(
         model_name=modelName,
         temperature=temperature,
+        max_tokens=maxTokens,
         openai_api_key=settings.OPENAI_API_KEY,
     )
     chain = ConversationChain(llm=llm, memory=ConversationBufferMemory())

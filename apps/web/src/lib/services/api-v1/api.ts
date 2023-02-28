@@ -44,6 +44,7 @@ export const api = async (
     return contentType?.includes("application/json") ? await res.json() : await res.text();
 };
 
+// Settings
 export interface SettingsFindOneRequest {}
 export const settingsFindOne = async (
     {}: SettingsFindOneRequest,
@@ -53,6 +54,7 @@ export const settingsFindOne = async (
     return await api(`settings?${params.toString()}`, apiOptions);
 };
 
+// Vectorstores
 export interface VectorstoreFindManyRequest {}
 export const vectorstoreFindMany = async (
     {}: VectorstoreFindManyRequest,
@@ -97,20 +99,23 @@ export const vectorstoreCreate = async (
     });
 };
 
+// Generate
 export interface CausalLMGenerateRequest {
     text: string;
     modelName?: string;
     temperature?: number;
+    maxTokens?: number;
     streaming?: boolean;
 }
 export const causalLMGenerate = async (
-    { text, modelName, temperature, streaming }: CausalLMGenerateRequest,
+    { text, modelName, temperature, maxTokens, streaming }: CausalLMGenerateRequest,
     apiOptions?: ApiOptions
 ): Promise<CausalGeneration> => {
     const params = new URLSearchParams();
     params.append("text", text);
     if (modelName !== undefined) params.append("modelName", modelName);
     if (temperature !== undefined) params.append("temperature", temperature.toString());
+    if (maxTokens !== undefined) params.append("maxTokens", maxTokens.toString());
     if (streaming !== undefined) params.append("streaming", streaming.toString());
 
     return await api(`causal/generate?${params.toString()}`, {
@@ -122,18 +127,28 @@ export interface CausalLMQARequest {
     text: string;
     modelName?: string;
     temperature?: number;
+    maxTokens?: number;
     agent?: Agent;
     agentPath?: string;
     agentTools?: AgentTool[];
 }
 export const causalLMQA = async (
-    { text, modelName, temperature, agent, agentPath, agentTools = [] }: CausalLMQARequest,
+    {
+        text,
+        modelName,
+        temperature,
+        maxTokens,
+        agent,
+        agentPath,
+        agentTools = []
+    }: CausalLMQARequest,
     apiOptions?: ApiOptions
 ): Promise<CausalGeneration> => {
     const params = new URLSearchParams();
     params.append("text", text);
     if (modelName !== undefined) params.append("modelName", modelName);
     if (temperature !== undefined) params.append("temperature", temperature.toString());
+    if (maxTokens !== undefined) params.append("maxTokens", maxTokens.toString());
     if (agent !== undefined) params.append("agent", agent);
     if (agentPath !== undefined) params.append("agentPath", agentPath);
     for (const tool of agentTools) params.append("agentTools", tool);
@@ -147,16 +162,18 @@ export interface CausalLMSummarizeRequest {
     text: string;
     modelName?: string;
     temperature?: number;
+    maxTokens?: number;
     chainType?: SummarizeChainType;
 }
 export const causalLMSummarize = async (
-    { text, modelName, temperature, chainType }: CausalLMSummarizeRequest,
+    { text, modelName, temperature, maxTokens, chainType }: CausalLMSummarizeRequest,
     apiOptions?: ApiOptions
 ): Promise<CausalGeneration> => {
     const params = new URLSearchParams();
     params.append("text", text);
     if (modelName !== undefined) params.append("modelName", modelName);
     if (temperature !== undefined) params.append("temperature", temperature.toString());
+    if (maxTokens !== undefined) params.append("maxTokens", maxTokens.toString());
     if (chainType !== undefined) params.append("chainType", chainType);
 
     return await api(`causal/qa?${params.toString()}`, {
@@ -168,15 +185,17 @@ export interface CausalLMConversationalRequest {
     text: string;
     modelName?: string;
     temperature?: number;
+    maxTokens?: number;
 }
 export const causalLMConversational = async (
-    { text, modelName, temperature }: CausalLMConversationalRequest,
+    { text, modelName, temperature, maxTokens }: CausalLMConversationalRequest,
     apiOptions?: ApiOptions
 ): Promise<CausalGeneration> => {
     const params = new URLSearchParams();
     params.append("text", text);
     if (modelName !== undefined) params.append("modelName", modelName);
     if (temperature !== undefined) params.append("temperature", temperature.toString());
+    if (maxTokens !== undefined) params.append("maxTokens", maxTokens.toString());
 
     return await api(`causal/conversational?${params.toString()}`, {
         options: { method: "POST" },
@@ -184,6 +203,7 @@ export const causalLMConversational = async (
     });
 };
 
+// ASR
 export interface ASRTranscribeRequest {
     file: File;
 }

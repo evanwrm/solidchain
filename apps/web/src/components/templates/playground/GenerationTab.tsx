@@ -29,6 +29,10 @@ const GenerationTab = () => {
         "solidchain.generate.temperature",
         0.7
     );
+    const [maxTokens, setMaxTokens] = createStorageSignal<number>(
+        "solidchain.generate.maxTokens",
+        1024
+    );
 
     const [submitting, generate] = createRouteAction(async (formData: CausalLMGenerateRequest) => {
         const response = causalLMGenerate(formData, {
@@ -79,9 +83,9 @@ const GenerationTab = () => {
     };
 
     return (
-        <div class="h-full w-full max-w-4xl p-4">
+        <div class="h-full w-full overflow-hidden p-4">
             <div class="grid h-full w-full flex-1 auto-cols-auto grid-cols-1 sm:grid-cols-3">
-                <div class="flex h-full w-full flex-col items-start justify-start p-2">
+                <div class="flex h-full w-full flex-col items-start justify-start">
                     <h1 class="my-8 text-4xl font-thin uppercase sm:text-5xl">Generation</h1>
                     <SelectInput
                         class="mb-2 w-48"
@@ -109,12 +113,24 @@ const GenerationTab = () => {
                         label="Temperature"
                         onValueChange={value => setTemperature(value)}
                     />
+                    <Slider
+                        value={maxTokens()}
+                        min={0}
+                        max={4096}
+                        step={32}
+                        label="Max Tokens"
+                        onValueChange={value => setMaxTokens(value)}
+                    />
                 </div>
-                <div class="col-span-2 flex h-full w-full flex-col items-start justify-center p-2">
+                <div class="col-span-2 flex h-full w-full flex-col items-start justify-center overflow-hidden">
                     <ChatArea
                         class="flex h-full w-full flex-col"
                         chatContainerClass="h-full w-full"
                         messages={messages}
+                        suggestions={[
+                            { text: "Write an email to a colleague to request a meeting." },
+                            { text: "Write an essay on the effects of the industrial revolution." }
+                        ]}
                         onMessage={handleMessage}
                         displayType={displayType()}
                     />

@@ -6,10 +6,10 @@ import SummarizationTab from "~/components/templates/playground/SummarizationTab
 
 const Home = () => {
     return (
-        <main class="flex h-full w-full flex-1 flex-col items-center justify-center">
-            <section class="flex h-full w-full flex-1 flex-col items-start justify-between px-4">
+        <main class="flex h-full w-full flex-1 flex-col items-center justify-center overflow-hidden">
+            <section class="flex h-full w-full flex-1 flex-col items-start justify-between overflow-hidden px-4">
                 <NavTabs
-                    class="mt-2 h-full w-full flex-1"
+                    class="mt-2 flex h-full w-full flex-1 flex-col overflow-hidden"
                     tabs={[
                         { value: "generation", label: "Generation", content: GenerationTab },
                         { value: "qa", label: "Q/A", content: QATab },

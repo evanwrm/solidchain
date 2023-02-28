@@ -10,10 +10,15 @@ import { ChatMessage } from "~/lib/validators/ChatMessage";
 import Icon from "../Icon";
 
 export type ChatDisplayType = "raw" | "markdown";
+export interface ChatSuggestion {
+    text: string;
+    type?: string;
+}
 interface Props {
     class?: string;
     chatContainerClass?: string;
     messages: ChatMessage[];
+    suggestions?: ChatSuggestion[];
     displayType?: ChatDisplayType;
     allowAudioInput?: boolean;
     audioInputPosition?: "above" | "inline";
@@ -91,7 +96,35 @@ const ChatArea = (props: Props) => {
                 )}
             >
                 <Show when={!props.messages.length}>
-                    <p class="my-auto text-center font-semibold opacity-80">No messages yet</p>
+                    <Show
+                        when={props.suggestions?.length}
+                        fallback={
+                            <p class="my-auto text-center font-semibold opacity-80">
+                                No messages yet
+                            </p>
+                        }
+                    >
+                        <div class="flex flex-col items-center justify-center">
+                            <div class="my-2 ml-8 flex h-full w-full items-center justify-start">
+                                <span class="mr-1">Suggestions</span>
+                                <Icon.HiOutlineLightBulb class="h-6 w-6" />
+                            </div>
+                            <div class="flex h-full w-full max-w-md items-center justify-between">
+                                <For each={props.suggestions}>
+                                    {suggestion => (
+                                        <Button.Root
+                                            class="m-2 rounded-md bg-base-200 p-2 text-base-content transition"
+                                            onClick={() => {
+                                                setValue(suggestion.text);
+                                            }}
+                                        >
+                                            "{suggestion.text}""
+                                        </Button.Root>
+                                    )}
+                                </For>
+                            </div>
+                        </div>
+                    </Show>
                 </Show>
                 <For each={props.messages.slice().reverse()}>
                     {(message, i) => {
@@ -119,11 +152,6 @@ const ChatArea = (props: Props) => {
                                             </p>
                                         }
                                     >
-                                        {/* <Match when={props.displayType === "raw"}>
-                                            <p class={cn(messageClass, "whitespace-pre-wrap")}>
-                                                {message.content}
-                                            </p>
-                                        </Match> */}
                                         <Match when={props.displayType === "markdown"}>
                                             <Markdown class={messageClass} text={message.content} />
                                         </Match>
@@ -142,7 +170,7 @@ const ChatArea = (props: Props) => {
                     />
                 </div>
             </Show>
-            <TextField.Root class="relative" value={value()} onValueChange={setValue}>
+            <TextField.Root class="relative mx-2" value={value()} onValueChange={setValue}>
                 <Icon.HiOutlineChatAlt class="absolute inset-y-0 left-2 my-auto h-6 w-6 text-base-content opacity-80 transition" />
                 <Show when={props.allowAudioInput && props.audioInputPosition === "inline"}>
                     <AudioInput
