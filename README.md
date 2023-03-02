@@ -86,7 +86,6 @@ Possible extensions
     -   extension bookmarking (upload html page to collection)
 -   discord extension
 -   visualization
-    -   charting (e.g. vega-lite grammar)
     -   stable diffusion (image generation toolkit + auto prompt engineering)
     -   llm call visualization (tracing)
 -   starter examples (email, mermaid graphs, terminal autocompletion)

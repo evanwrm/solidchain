@@ -1,7 +1,7 @@
 import uuid
 from typing import Any, List, Optional
 
-from fastapi import APIRouter, Body, Depends, HTTPException, UploadFile
+from fastapi import APIRouter, Body, Depends, Form, HTTPException, UploadFile
 from sqlalchemy.orm import Session
 
 from solidchain.api.dependencies import get_db
@@ -55,24 +55,23 @@ async def findOne(
 async def create(
     *,
     db: Session = Depends(get_db),
-    name: str = Body(),
-    description: str = Body(""),
-    vectorDbType: VectorStoreDB = Body(VectorStoreDB.CHROMA),
-    embeddingsType: Embeddings = Body(Embeddings.HUGGINGFACE_INSTRUCT),
-    urls: List[str] = Body([]),
-    files: List[UploadFile] = Body([]),
+    name: str = Form(),
+    description: str = Form(""),
+    vectorDbType: VectorStoreDB = Form(VectorStoreDB.CHROMA),
+    embeddingsType: Embeddings = Form(Embeddings.HUGGINGFACE_INSTRUCT),
+    urls: List[str] = Form([]),
+    files: List[UploadFile] = Form([]),
 ) -> Any:
     try:
         file_documents = [doc for file in files for doc in from_file(file)]
         url_documents = [doc for url in urls for doc in from_url(url)]
 
-        embeddings_cls = get_embeddings_instance(embeddingsType)
-        vectorstore_cls = get_vectorstore_instance(vectorDbType)
+        embeddings = get_embeddings_instance(embeddingsType)
         index_directory = str(data_path() / f"preprocessed/{uuid.uuid4()}")
         from_documents_save_local(
-            vectorstore_cls,
+            vectorDbType,
             file_documents + url_documents,
-            embeddings_cls(),
+            embeddings,
             directory=index_directory,
         )
     except NotImplementedError:

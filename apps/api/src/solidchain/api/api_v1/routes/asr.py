@@ -1,7 +1,7 @@
 from importlib.metadata import version
 from typing import Any
 
-from fastapi import APIRouter, UploadFile
+from fastapi import APIRouter, Form, UploadFile
 from pydub import AudioSegment
 
 from solidchain.schemas.audio_transcription import (
@@ -14,7 +14,9 @@ router = APIRouter()
 
 
 @router.post("/transcribe", response_model=AudioTranscription)
-def transcribe(*, file: UploadFile, modelName: TranscriptionModel = "large-v2") -> Any:
+def transcribe(
+    *, file: UploadFile = Form(), modelName: TranscriptionModel = Form("large-v2")
+) -> Any:
     audio_segment = AudioSegment.from_file(file.file)
     output = whisper_transribe(audio_segment, model=f"openai/whisper-{modelName}")
 

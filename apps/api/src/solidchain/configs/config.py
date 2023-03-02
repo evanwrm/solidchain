@@ -7,8 +7,9 @@ class Settings(BaseSettings):
     API_V1_PREFIX: str = "/api/v1"
     APP_NAME: str = "SolidChain"
 
-    OPENAI_API_KEY: str
-    SERPAPI_API_KEY: str
+    OPENAI_API_KEY: Optional[str]
+    COHERE_API_KEY: Optional[str]
+    SERPAPI_API_KEY: Optional[str]
 
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = [
         "http://localhost:3000",
@@ -42,6 +43,7 @@ class Settings(BaseSettings):
 
     class Config:
         env_file = ".env"
+        env_file_encoding = "utf-8"
         case_sensitive = True
 
 

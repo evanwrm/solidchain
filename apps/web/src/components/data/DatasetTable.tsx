@@ -47,6 +47,11 @@ const DatasetTable = (props: Props) => {
             type: "string",
             optional: false
         }),
+        columnMapper("embeddingsType", {
+            name: "Embeddings",
+            type: "string",
+            optional: false
+        }),
         columnMapper("files", {
             name: "Files",
             type: "string",

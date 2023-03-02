@@ -107,12 +107,9 @@ def qa(
                 .all()
             )
             for vectorstore_data in vectorstores:
-                embeddings_cls = get_embeddings_instance(
-                    vectorstore_data.embeddingsType
-                )
-                embeddings = embeddings_cls()
-                vectorstore_cls = get_vectorstore_instance(vectorstore_data.vectorDb)
-                vectorstore = vectorstore_cls(
+                embeddings = get_embeddings_instance(vectorstore_data.embeddingsType)
+                vectorstore = get_vectorstore_instance(
+                    vectorstore_data.vectorDb,
                     persist_directory=vectorstore_data.index.path,
                     embedding_function=embeddings,
                 )

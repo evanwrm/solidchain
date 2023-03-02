@@ -24,7 +24,6 @@ export const api = async (
         method: "GET",
         ...options,
         headers: {
-            "Content-Type": "application/json",
             Origin: env.VITE_SITE_NAME,
             ...(options.headers ?? {})
         }
@@ -123,6 +122,9 @@ export const causalLMGenerate = async (
     return await api(`causal/generate`, {
         options: {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify({
                 text,
                 modelName,
@@ -160,6 +162,9 @@ export const causalLMQA = async (
     return await api(`causal/qa`, {
         options: {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify({
                 text,
                 modelName,
@@ -188,6 +193,9 @@ export const causalLMSummarize = async (
     return await api(`causal/summarize`, {
         options: {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify({ text, modelName, temperature, maxTokens, chainType })
         },
         ...apiOptions
@@ -206,6 +214,9 @@ export const causalLMConversational = async (
     return await api(`causal/conversational`, {
         options: {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify({ text, modelName, temperature, maxTokens })
         },
         ...apiOptions
@@ -214,18 +225,18 @@ export const causalLMConversational = async (
 
 // ASR
 export interface ASRTranscribeRequest {
+    modelName?: string;
     file: File;
 }
 export const asrTranscribe = async (
-    { file }: ASRTranscribeRequest,
+    { modelName, file }: ASRTranscribeRequest,
     apiOptions?: ApiOptions
 ): Promise<AudioTranscription> => {
-    const params = new URLSearchParams();
-
     const formData = new FormData();
+    if (modelName !== undefined) formData.append("modelName", modelName);
     formData.append("file", file);
 
-    return await api(`asr/transcribe?${params.toString()}`, {
+    return await api(`asr/transcribe`, {
         options: { method: "POST", body: formData },
         ...apiOptions
     });

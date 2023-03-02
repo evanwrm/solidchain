@@ -47,7 +47,7 @@ const Datasets = () => {
             embeddingsType: embeddings(),
             files: files().map(f => f.file)
         });
-        refetchRouteData(["vectorstoreFindMany"]);
+        await refetchRouteData(["vectorstoreFindMany"]);
         setFiles([]);
     };
 
@@ -118,8 +118,6 @@ const Datasets = () => {
                     </div>
                     <div class="sm:col-span-2">
                         <Dropzone class="h-96" files={files()} onDrop={setFiles} />
-                    </div>
-                    <div class="sm:col-span-3 sm:col-start-2">
                         <Button.Root
                             class={cn(
                                 "ml-4 mt-4 flex items-center justify-center rounded-md border border-secondary px-2 py-1 text-secondary opacity-80 transition hover:opacity-100"

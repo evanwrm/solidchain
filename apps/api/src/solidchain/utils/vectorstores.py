@@ -1,5 +1,5 @@
 import tempfile
-from typing import Any, List, Type
+from typing import Any, List, Optional, Type
 from urllib.parse import urlparse
 
 import langchain.vectorstores as vectorstores
@@ -10,7 +10,7 @@ from langchain.vectorstores.base import VectorStore
 from solidchain.schemas.vectorstore import VectorStoreDB
 
 
-def infer_vectorstore_type(vectorstore: VectorStore):
+def infer_vectorstore_type(vectorstore: VectorStore) -> VectorStoreDB:
     match vectorstore:
         case isinstance(vectorstores.Chroma):
             vectorDb = VectorStoreDB.CHROMA
@@ -31,7 +31,7 @@ def infer_vectorstore_type(vectorstore: VectorStore):
     return vectorDb
 
 
-def get_vectorstore_instance(vectorDb: VectorStoreDB):
+def get_vectorstore_cls(vectorDb: VectorStoreDB) -> Type[VectorStore]:
     match vectorDb:
         case VectorStoreDB.CHROMA:
             vectorstore_cls = vectorstores.Chroma
@@ -52,8 +52,50 @@ def get_vectorstore_instance(vectorDb: VectorStoreDB):
     return vectorstore_cls
 
 
+def get_vectorstore_instance(
+    vectorDb: VectorStoreDB,
+    collection_name: str = "solidchain",
+    embedding_function: Optional[Embeddings] = None,
+    persist_directory: Optional[str] = None,
+) -> VectorStore:
+    match vectorDb:
+        case VectorStoreDB.CHROMA:
+            vectorstore_cls = vectorstores.Chroma(
+                collection_name=collection_name,
+                embedding_function=embedding_function,
+                persist_directory=persist_directory,
+            )
+        case VectorStoreDB.ELASTIC_SEARCH:
+            vectorstore_cls = vectorstores.ElasticVectorSearch(
+                embedding_function=embedding_function.embed_query
+            )
+        case VectorStoreDB.FAISS:
+            vectorstore_cls = vectorstores.FAISS(
+                embedding_function=embedding_function.embed_query
+            )
+        case VectorStoreDB.MILVUS:
+            vectorstore_cls = vectorstores.Milvus(
+                collection_name=collection_name,
+                embedding_function=embedding_function.embed_query,
+            )
+        case VectorStoreDB.PINECONE:
+            vectorstore_cls = vectorstores.Pinecone(
+                embedding_function=embedding_function.embed_query,
+            )
+        case VectorStoreDB.QDRANT:
+            vectorstore_cls = vectorstores.Qdrant(
+                collection_name=collection_name,
+                embedding_function=embedding_function.embed_query,
+            )
+        case VectorStoreDB.WEAVIATE:
+            vectorstore_cls = vectorstores.Weaviate()
+        case _:
+            raise NotImplementedError
+    return vectorstore_cls
+
+
 def from_documents_save_local(
-    vectorstore_cls: Type[VectorStore],
+    vectorDb: VectorStoreDB,
     documents: List[Document],
     embeddings: Embeddings,
     directory=None,
@@ -62,6 +104,7 @@ def from_documents_save_local(
         temp_directory = tempfile.TemporaryDirectory()
         directory = temp_directory.name
 
+    vectorstore_cls = get_vectorstore_cls(vectorDb)
     vectorstore = vectorstore_cls.from_documents(
         documents, embeddings, persist_directory=directory
     )
