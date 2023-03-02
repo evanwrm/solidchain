@@ -22,6 +22,18 @@ pnpm install
 pnpm dev
 ```
 
+### Web Extension
+
+To run the extension locally:
+
+```sh
+cd apps/web-extension
+pnpm install
+pnpm dev
+```
+
+To view this extension (with HMR), go to `chrome://extensions` and click `Load unpacked` choosing the `build/chrome-mv3-dev` directory. See the [Plasmo Docs](https://docs.plasmo.com/framework#loading-the-extension-in-chrome) for more detail.
+
 ### API
 
 To run the api, first create a virtual environment. We provide a sample `environment.yml` file to use with conda environments:

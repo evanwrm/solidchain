@@ -3,6 +3,7 @@
     "version": "0.1.0",
     "private": true,
     "license": "MIT",
+    "author": "Evan Madill <emadill@outlook.com>",
     "type": "module",
     "scripts": {
         "build": "solid-start build",
