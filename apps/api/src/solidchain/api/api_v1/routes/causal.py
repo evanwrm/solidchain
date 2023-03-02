@@ -35,11 +35,11 @@ router = APIRouter()
 @router.post("/generate", response_model=CausalGeneration)
 def generate(
     *,
-    text: str,
-    modelName: CausalModel = "text-curie-001",
-    temperature: float = 0.7,
-    maxTokens: int = 1024,
-    streaming: bool = False,
+    text: str = Body(),
+    modelName: CausalModel = Body("text-curie-001"),
+    temperature: float = Body(0.7),
+    maxTokens: int = Body(1024),
+    streaming: bool = Body(False),
 ) -> Any:
     llm_cls = get_llm_instance(llm_type=modelName)
     llm = llm_cls(
@@ -53,10 +53,15 @@ def generate(
     if streaming:
 
         def streaming_response():
-            for output in llm.stream(text):
-                generation = StreamingCausalGeneration(
-                    text=output["choices"][0]["text"]
-                )
+            try:
+                generator = llm.stream(text)
+                for output in generator:
+                    generation = StreamingCausalGeneration(
+                        text=output["choices"][0]["text"]
+                    )
+                    yield generation.json()
+            except Exception as e:
+                generation = StreamingCausalGeneration(text=llm(text))
                 yield generation.json()
 
         return StreamingResponse(streaming_response())
@@ -105,10 +110,11 @@ def qa(
                 embeddings_cls = get_embeddings_instance(
                     vectorstore_data.embeddingsType
                 )
+                embeddings = embeddings_cls()
                 vectorstore_cls = get_vectorstore_instance(vectorstore_data.vectorDb)
                 vectorstore = vectorstore_cls(
                     persist_directory=vectorstore_data.index.path,
-                    embedding_function=embeddings_cls(),
+                    embedding_function=embeddings,
                 )
                 vectorstore_qachain = VectorDBQA.from_chain_type(
                     llm=llm, chain_type=chainType, vectorstore=vectorstore
@@ -152,11 +158,11 @@ def qa(
 @router.post("/summarize", response_model=CausalGeneration)
 def summarize(
     *,
-    text: str,
-    modelName: CausalModel = "text-curie-001",
-    temperature: float = 0.7,
-    maxTokens: int = 1024,
-    chainType: SummarizeChainType = "stuff",
+    text: str = Body(),
+    modelName: CausalModel = Body("text-curie-001"),
+    temperature: float = Body(0.7),
+    maxTokens: int = Body(1024),
+    chainType: SummarizeChainType = Body("stuff"),
 ) -> Any:
     llm_cls = get_llm_instance(llm_type=modelName)
     llm = llm_cls(
@@ -177,10 +183,10 @@ def summarize(
 @router.post("/conversational", response_model=CausalGeneration)
 def conversational(
     *,
-    text: str,
-    modelName: CausalModel = "gpt-3.5-turbo",
-    temperature: float = 0.7,
-    maxTokens: int = 1024,
+    text: str = Body(),
+    modelName: CausalModel = Body("gpt-3.5-turbo"),
+    temperature: float = Body(0.7),
+    maxTokens: int = Body(1024),
 ) -> Any:
     llm_cls = get_llm_instance(llm_type=modelName)
     llm = llm_cls(

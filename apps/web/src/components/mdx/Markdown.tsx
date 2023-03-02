@@ -9,8 +9,10 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import remarkParse from "remark-parse/lib";
 import remarkRehype from "remark-rehype";
-import { createResource, Suspense } from "solid-js";
+import { createEffect, createResource, Suspense } from "solid-js";
 import { unified } from "unified";
+import vegaEmbed from "vega-embed";
+import rehypeVega from "~/components/mdx/rehypeVega";
 import "~/styles/prism.css";
 
 const renderMarkdown = async (text: string) => {
@@ -23,7 +25,8 @@ const renderMarkdown = async (text: string) => {
         .use(rehypeAutolinkHeadings)
         .use(rehypeKatex)
         .use(rehypeCodeTitles)
-        .use(rehypePrism)
+        .use(rehypeVega)
+        .use(rehypePrism, { ignoreMissing: true })
         // .use(rehypeSanitize)
         .use(rehypeStringify) // compile
         .process(text);
@@ -35,11 +38,31 @@ interface Props {
 }
 
 const Markdown = (props: Props) => {
+    let ref: HTMLDivElement | undefined;
     const [html] = createResource(props.text, renderMarkdown);
+
+    createEffect(() => {
+        setTimeout(() => {
+            if (ref) {
+                const containers = ref.querySelectorAll("[data-vega]");
+                containers.forEach(container => {
+                    const node = container as HTMLElement;
+                    const spec = JSON.parse(node.dataset.vega ?? "");
+                    const resolvedSpec = {
+                        width: "container",
+                        background: "transparent",
+                        ...spec
+                    };
+
+                    vegaEmbed(node, resolvedSpec, { padding: 0, theme: "dark" });
+                });
+            }
+        });
+    });
 
     return (
         <Suspense>
-            <div class={props.class} innerHTML={html()} />
+            <div class={props.class} innerHTML={html()} ref={ref} />
         </Suspense>
     );
 };

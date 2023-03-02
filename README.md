@@ -6,7 +6,7 @@ This is a web-based browser interface for searching with Large Language Models (
 
 | ![Placeholder cover](apps/web/src/assets/cover.png) | ![Placeholder datasets](apps/web/src/assets/datasets.png) |
 | :-------------------------------------------------: | :-------------------------------------------------------: |
-|                                                     |                                                           |
+|                                                     |   ![Placeholder charts](apps/web/src/assets/charts.png)   |
 
 ## Installation
 
