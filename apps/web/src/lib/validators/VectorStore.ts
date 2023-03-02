@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { fileStorageValidator } from "~/lib/validators/FileStorage";
 import { timestampValidator } from "~/lib/validators/Timestamp";
+import { embeddingsValidator } from "./Embeddings";
 
 export const vectorDbValidator = z.enum([
     "chroma",
@@ -19,6 +20,7 @@ export const vectorStoreValidator = z
         name: z.string(),
         description: z.string(),
         vectorDb: vectorDbValidator,
+        embeddingsType: embeddingsValidator,
         files: z.array(fileStorageValidator),
         index: fileStorageValidator.nullish()
     })

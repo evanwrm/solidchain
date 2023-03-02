@@ -10,12 +10,18 @@ interface TabItem {
 
 interface Props {
     class?: string;
+    selectedTab?: string;
     tabs: TabItem[];
+    onTabChange?: (value: string) => void;
 }
 
 const NavTabs = (props: Props) => {
     return (
-        <Tabs.Root class={cn(props.class)}>
+        <Tabs.Root
+            class={cn(props.class)}
+            value={props.selectedTab}
+            onValueChange={props.onTabChange}
+        >
             <div>
                 <Tabs.List class="relative inline-flex items-center justify-start border-b border-base-300">
                     <For each={props.tabs}>

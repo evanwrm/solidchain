@@ -13,6 +13,7 @@ import { VectorStore } from "~/lib/validators/VectorStore";
 interface Props {
     data?: VectorStore[];
     tableOptions?: VisualTableOptions;
+    class?: string;
     children?: JSX.Element;
 }
 
@@ -94,6 +95,7 @@ const DatasetTable = (props: Props) => {
 
     return (
         <TableContainer
+            class={props.class}
             hidden={!props.data?.length}
             table={table}
             tableOptions={props.tableOptions}

@@ -65,7 +65,7 @@ const MultiSelectInput = <T extends string = any>(props: Props<T>) => {
                                 const numGroups = Object.keys(optionsGroups()).length;
                                 return (
                                     <MultiSelect.Group>
-                                        <Show when={Object.keys(optionsGroups()).length > 1}>
+                                        <Show when={numGroups > 1}>
                                             <MultiSelect.GroupLabel class="ml-8 text-sm font-semibold opacity-40">
                                                 {group[0]}
                                             </MultiSelect.GroupLabel>

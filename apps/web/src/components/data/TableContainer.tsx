@@ -77,6 +77,7 @@ interface Props {
     table: Table<any>;
     tableOptions?: VisualTableOptions;
     hidden?: boolean;
+    class?: string;
     children?: JSX.Element;
 }
 
@@ -91,7 +92,7 @@ const TableContainer = (props: Props) => {
     props = mergeProps({ tableOptions: defaultTableOptions }, props);
 
     return (
-        <div class="flex h-full w-full flex-col items-center justify-center">
+        <div class={cn("flex h-full w-full flex-col items-center justify-center", props.class)}>
             <Show when={!props.hidden}>
                 {props.children}
                 <div class="scrollbar w-full overflow-x-auto">
@@ -164,7 +165,7 @@ const TableContainer = (props: Props) => {
                                             {cell => (
                                                 <td
                                                     class={cn(
-                                                        "max-w-[16rem] overflow-x-auto bg-inherit px-2",
+                                                        "max-w-[16rem] overflow-hidden overflow-ellipsis bg-inherit px-2",
                                                         props.tableOptions?.compact
                                                             ? "py-1"
                                                             : "py-2"

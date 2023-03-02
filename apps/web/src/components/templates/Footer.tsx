@@ -5,17 +5,17 @@ import { env } from "~/lib/env/client";
 import { ApiSettingsContext } from "~/routes/(marketing)";
 
 const Footer = () => {
-    const [settings] = useContext(ApiSettingsContext);
+    const [apiSettings] = useContext(ApiSettingsContext);
     const versions = createMemo(() => [
-        { name: "python", version: settings?.versions.pythonVersion },
-        { name: "fastapi", version: settings?.versions.fastapiVersion },
-        { name: "torch", version: settings?.versions.torchVersion },
-        { name: "transformers", version: settings?.versions.transformersVersion },
-        { name: "langchain", version: settings?.versions.langchainVersion },
+        { name: "python", version: apiSettings?.versions.pythonVersion },
+        { name: "fastapi", version: apiSettings?.versions.fastapiVersion },
+        { name: "torch", version: apiSettings?.versions.torchVersion },
+        { name: "transformers", version: apiSettings?.versions.transformersVersion },
+        { name: "langchain", version: apiSettings?.versions.langchainVersion },
         {
             name: "commit",
-            version: settings?.gitConfig.commitHash,
-            href: `${env.VITE_GITHUB_REPO}/commit/${settings?.gitConfig.commitHash}`
+            version: apiSettings?.gitConfig.commitHash,
+            href: `${env.VITE_GITHUB_REPO}/commit/${apiSettings?.gitConfig.commitHash}`
         }
     ]);
 

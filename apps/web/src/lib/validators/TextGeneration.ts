@@ -1,6 +1,8 @@
 import { z } from "zod";
 
 export const causalModelValidator = z.enum([
+    // ChatGPT
+    "gpt-3.5-turbo",
     // GPT-3
     "text-davinci-003",
     "text-curie-001",

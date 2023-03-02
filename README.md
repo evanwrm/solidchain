@@ -85,5 +85,8 @@ Possible extensions
     -   capture users clipboard/current page as context
     -   extension bookmarking (upload html page to collection)
 -   discord extension
--   llm call visualization (tracing)
+-   visualization
+    -   charting (e.g. vega-lite grammar)
+    -   stable diffusion (image generation toolkit + auto prompt engineering)
+    -   llm call visualization (tracing)
 -   starter examples (email, mermaid graphs, terminal autocompletion)

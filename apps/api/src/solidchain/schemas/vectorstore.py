@@ -3,6 +3,7 @@ from typing import List
 
 from pydantic import BaseModel
 
+from solidchain.schemas.embeddings import Embeddings
 from solidchain.schemas.mixins.dates import TimestampMixin
 from solidchain.schemas.storage import FileStorage
 
@@ -24,6 +25,7 @@ class VectorStoreBase(BaseModel):
     name: str
     description: str
     vectorDb: str
+    embeddingsType: Embeddings
     urls: List[str]
     files: List[FileStorage]
     index: FileStorage

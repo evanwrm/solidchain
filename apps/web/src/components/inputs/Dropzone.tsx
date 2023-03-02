@@ -7,16 +7,18 @@ import { formatBytes } from "~/lib/utils/string";
 import { cn } from "~/lib/utils/styles";
 
 interface Props {
+    files: UploadFile[];
     multiple?: boolean;
     accept?: string;
     displayUploads?: boolean;
     class?: string;
-    onDrop?: (files: File[]) => void;
+    onDrop?: (files: UploadFile[]) => void;
 }
 
 const Dropzone = (props: Props) => {
     props = mergeProps(
         {
+            files: [],
             accept: ".txt,.doc,.docx,.ppt,.pptx,.pdf,.eml,text/html,image/*",
             multiple: true,
             displayUploads: true
@@ -39,6 +41,7 @@ const Dropzone = (props: Props) => {
         files: droppedFiles,
         clearFiles: clearDroppedFiles
     } = createDropzone({
+        onDrop: handleFileUpload,
         onDragEnter: () => {
             setIsDragging(true);
         },
@@ -49,22 +52,21 @@ const Dropzone = (props: Props) => {
             setIsDragging(false);
         }
     });
-    const files = createMemo(() => [...selectedFiles(), ...droppedFiles()]);
-
-    const handleFileUpload = async (files: UploadFile[]) => {
-        const rawFiles = files.map(f => f.file);
-        props.onDrop?.(rawFiles);
-    };
+    async function handleFileUpload(_: UploadFile[]) {
+        const combinedFiles = [...selectedFiles(), ...droppedFiles()];
+        props.onDrop?.(combinedFiles);
+    }
     const handleClearFiles = () => {
         clearSelectedFiles();
         clearDroppedFiles();
+        props.onDrop?.([]);
     };
 
     return (
         <div class={cn("flex max-w-full flex-col p-2", props.class)}>
             <div
                 class={cn(
-                    "h-full w-full rounded-md bg-base-200 outline-dashed outline-2 outline-offset-2 outline-base-300 transition-all duration-300 hover:bg-opacity-100",
+                    "h-full w-full flex-1 rounded-md bg-base-200 outline-dashed outline-2 outline-offset-2 outline-base-300 transition-all duration-300 hover:bg-opacity-100",
                     isDragging()
                         ? "bg-opacity-100 outline-base-200"
                         : "bg-opacity-60 outline-base-300"
@@ -75,7 +77,7 @@ const Dropzone = (props: Props) => {
                     class="flex h-full w-full cursor-pointer flex-col items-center justify-center text-base-content transition"
                     onClick={() => selectFiles(handleFileUpload)}
                 >
-                    <div class="pointer-events-none flex select-none flex-col items-center justify-center">
+                    <div class="pointer-events-none m-4 flex select-none flex-col items-center justify-center">
                         <span class="text-lg">Upload Files</span>
                         <div class="mt-1 flex w-2/3 flex-wrap items-center justify-center pb-4 text-sm opacity-60">
                             <For each={acceptTypes()}>
@@ -93,15 +95,15 @@ const Dropzone = (props: Props) => {
             </div>
             <Show when={props.displayUploads}>
                 <Switch>
-                    <Match when={files().length === 0}>
+                    <Match when={props.files.length === 0}>
                         <div class="mt-2">
                             <div class="p-2">No files selected.</div>
                         </div>
                     </Match>
-                    <Match when={files().length > 0}>
-                        <div class="mt-2">
+                    <Match when={props.files.length > 0}>
+                        <div class="scrollbar mt-2 overflow-y-auto">
                             <div class="flex items-center justify-between p-2">
-                                <span>{files().length} file(s) selected.</span>
+                                <span>{props.files.length} file(s) selected.</span>
                                 <Button.Root
                                     class="rounded-md border border-error px-2 py-1 text-error opacity-80 transition hover:opacity-100"
                                     onClick={handleClearFiles}
@@ -109,7 +111,7 @@ const Dropzone = (props: Props) => {
                                     Clear files
                                 </Button.Root>
                             </div>
-                            <For each={files()}>
+                            <For each={props.files}>
                                 {file => {
                                     const FileIcon =
                                         getIconAliased(file.name.split(".").pop() ?? "") ??

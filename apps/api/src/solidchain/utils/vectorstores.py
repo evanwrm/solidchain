@@ -1,13 +1,16 @@
 import tempfile
+from typing import Any, List, Type
 from urllib.parse import urlparse
 
 import langchain.vectorstores as vectorstores
+from langchain.docstore.document import Document
+from langchain.embeddings.base import Embeddings
 from langchain.vectorstores.base import VectorStore
 
 from solidchain.schemas.vectorstore import VectorStoreDB
 
 
-def get_type(vectorstore: VectorStore):
+def infer_vectorstore_type(vectorstore: VectorStore):
     match vectorstore:
         case isinstance(vectorstores.Chroma):
             vectorDb = VectorStoreDB.CHROMA
@@ -28,7 +31,7 @@ def get_type(vectorstore: VectorStore):
     return vectorDb
 
 
-def get_instance(vectorDb: VectorStoreDB):
+def get_vectorstore_instance(vectorDb: VectorStoreDB):
     match vectorDb:
         case VectorStoreDB.CHROMA:
             vectorstore_cls = vectorstores.Chroma
@@ -49,10 +52,27 @@ def get_instance(vectorDb: VectorStoreDB):
     return vectorstore_cls
 
 
-def save_index_local(vectorstore: VectorStore):
-    """Save index to filestorage"""
-    with tempfile.TemporaryDirectory() as tmp:
-        vectorstore.save_local(tmp)
-        directory = tmp
+def from_documents_save_local(
+    vectorstore_cls: Type[VectorStore],
+    documents: List[Document],
+    embeddings: Embeddings,
+    directory=None,
+) -> VectorStore:
+    if directory is None:
+        temp_directory = tempfile.TemporaryDirectory()
+        directory = temp_directory.name
 
-    return directory
+    vectorstore = vectorstore_cls.from_documents(
+        documents, embeddings, persist_directory=directory
+    )
+    save_index_local(vectorstore, directory)
+    return vectorstore
+
+
+def save_index_local(vectorstore: VectorStore, directory: str) -> bool:
+    """Save index to filestorage"""
+    try:
+        vectorstore.save_local(directory)
+        return True
+    except Exception as e:
+        return False

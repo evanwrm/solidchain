@@ -1,9 +1,11 @@
 from enum import Enum
+from typing import Any, List
 
 from pydantic import BaseModel
 
 
 class CausalModel(str, Enum):
+    GPT_3_5_TURBO = "gpt-3.5-turbo"
     TEXT_DAVINCI_003 = "text-davinci-003"
     TEXT_CURIE_001 = "text-curie-001"
     TEXT_BABBAGE_001 = "text-babbage-001"
@@ -14,6 +16,7 @@ class CausalModel(str, Enum):
 
 class CausalGeneration(BaseModel):
     text: str
+    steps: List[Any] = []
 
 
 class StreamingCausalGeneration(BaseModel):

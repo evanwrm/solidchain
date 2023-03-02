@@ -28,6 +28,7 @@ class VectorStore(Base, TimestampMixin):
     name = Column(String, nullable=False)
     description = Column(String)
     vectorDb = Column(String, nullable=False)
+    embeddingsType = Column(String, nullable=False)
     urls = Column(ARRAY(String))
     files = relationship(
         "FileStorage",

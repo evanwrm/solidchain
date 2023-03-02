@@ -113,12 +113,12 @@ const ChatArea = (props: Props) => {
                                 <For each={props.suggestions}>
                                     {suggestion => (
                                         <Button.Root
-                                            class="m-2 rounded-md bg-base-200 p-2 text-base-content transition"
+                                            class="m-2 rounded-md bg-base-200 bg-opacity-80 p-2 text-base-content transition hover:bg-opacity-100"
                                             onClick={() => {
                                                 setValue(suggestion.text);
                                             }}
                                         >
-                                            "{suggestion.text}""
+                                            "{suggestion.text}"
                                         </Button.Root>
                                     )}
                                 </For>

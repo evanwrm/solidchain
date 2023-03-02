@@ -2,6 +2,7 @@ import { env } from "~/lib/env/client";
 import { Agent, AgentTool } from "~/lib/validators/Agents";
 import { AudioTranscription } from "~/lib/validators/audioTranscription";
 import { SummarizeChainType } from "~/lib/validators/Chains";
+import { EmbeddingsType } from "~/lib/validators/Embeddings";
 import { ApiSettings } from "~/lib/validators/Settings";
 import { CausalGeneration } from "~/lib/validators/TextGeneration";
 import { VectorDbType, VectorStore } from "~/lib/validators/VectorStore";
@@ -23,6 +24,7 @@ export const api = async (
         method: "GET",
         ...options,
         headers: {
+            "Content-Type": "application/json",
             Origin: env.VITE_SITE_NAME,
             ...(options.headers ?? {})
         }
@@ -76,24 +78,31 @@ export const vectorstoreFindOne = async (
 export interface VectorstoreCreateRequest {
     name: string;
     description?: string;
-    vectorDb?: VectorDbType;
+    vectorDbType?: VectorDbType;
+    embeddingsType?: EmbeddingsType;
     urls?: string[];
     files?: File[];
 }
 export const vectorstoreCreate = async (
-    { name, description, vectorDb, urls = [], files = [] }: VectorstoreCreateRequest,
+    {
+        name,
+        description,
+        vectorDbType,
+        embeddingsType,
+        urls = [],
+        files = []
+    }: VectorstoreCreateRequest,
     apiOptions?: ApiOptions
 ): Promise<VectorStore> => {
-    const params = new URLSearchParams();
-    params.append("name", name);
-    if (description !== undefined) params.append("description", description);
-    if (vectorDb !== undefined) params.append("vectorDb", vectorDb);
-    for (const url of urls) params.append("urls", url);
-
     const formData = new FormData();
+    formData.append("name", name);
+    if (description !== undefined) formData.append("description", description);
+    if (vectorDbType !== undefined) formData.append("vectorDbType", vectorDbType);
+    if (embeddingsType !== undefined) formData.append("embeddingsType", embeddingsType);
+    for (const url of urls) formData.append("urls", url);
     for (const file of files) formData.append("files", file);
 
-    return await api(`vectorstores/create?${params.toString()}`, {
+    return await api(`vectorstores/create`, {
         options: { method: "POST", body: formData },
         ...apiOptions
     });
@@ -111,15 +120,17 @@ export const causalLMGenerate = async (
     { text, modelName, temperature, maxTokens, streaming }: CausalLMGenerateRequest,
     apiOptions?: ApiOptions
 ): Promise<CausalGeneration> => {
-    const params = new URLSearchParams();
-    params.append("text", text);
-    if (modelName !== undefined) params.append("modelName", modelName);
-    if (temperature !== undefined) params.append("temperature", temperature.toString());
-    if (maxTokens !== undefined) params.append("maxTokens", maxTokens.toString());
-    if (streaming !== undefined) params.append("streaming", streaming.toString());
-
-    return await api(`causal/generate?${params.toString()}`, {
-        options: { method: "POST" },
+    return await api(`causal/generate`, {
+        options: {
+            method: "POST",
+            body: JSON.stringify({
+                text,
+                modelName,
+                temperature,
+                maxTokens,
+                streaming
+            })
+        },
         ...apiOptions
     });
 };
@@ -130,7 +141,8 @@ export interface CausalLMQARequest {
     maxTokens?: number;
     agent?: Agent;
     agentPath?: string;
-    agentTools?: AgentTool[];
+    agentTools?: (AgentTool | string)[];
+    chainType?: SummarizeChainType;
 }
 export const causalLMQA = async (
     {
@@ -140,21 +152,25 @@ export const causalLMQA = async (
         maxTokens,
         agent,
         agentPath,
-        agentTools = []
+        agentTools = [],
+        chainType
     }: CausalLMQARequest,
     apiOptions?: ApiOptions
 ): Promise<CausalGeneration> => {
-    const params = new URLSearchParams();
-    params.append("text", text);
-    if (modelName !== undefined) params.append("modelName", modelName);
-    if (temperature !== undefined) params.append("temperature", temperature.toString());
-    if (maxTokens !== undefined) params.append("maxTokens", maxTokens.toString());
-    if (agent !== undefined) params.append("agent", agent);
-    if (agentPath !== undefined) params.append("agentPath", agentPath);
-    for (const tool of agentTools) params.append("agentTools", tool);
-
-    return await api(`causal/qa?${params.toString()}`, {
-        options: { method: "POST" },
+    return await api(`causal/qa`, {
+        options: {
+            method: "POST",
+            body: JSON.stringify({
+                text,
+                modelName,
+                temperature,
+                maxTokens,
+                agent,
+                agentPath,
+                agentTools,
+                chainType
+            })
+        },
         ...apiOptions
     });
 };
@@ -169,15 +185,11 @@ export const causalLMSummarize = async (
     { text, modelName, temperature, maxTokens, chainType }: CausalLMSummarizeRequest,
     apiOptions?: ApiOptions
 ): Promise<CausalGeneration> => {
-    const params = new URLSearchParams();
-    params.append("text", text);
-    if (modelName !== undefined) params.append("modelName", modelName);
-    if (temperature !== undefined) params.append("temperature", temperature.toString());
-    if (maxTokens !== undefined) params.append("maxTokens", maxTokens.toString());
-    if (chainType !== undefined) params.append("chainType", chainType);
-
-    return await api(`causal/qa?${params.toString()}`, {
-        options: { method: "POST" },
+    return await api(`causal/summarize`, {
+        options: {
+            method: "POST",
+            body: JSON.stringify({ text, modelName, temperature, maxTokens, chainType })
+        },
         ...apiOptions
     });
 };
@@ -191,14 +203,11 @@ export const causalLMConversational = async (
     { text, modelName, temperature, maxTokens }: CausalLMConversationalRequest,
     apiOptions?: ApiOptions
 ): Promise<CausalGeneration> => {
-    const params = new URLSearchParams();
-    params.append("text", text);
-    if (modelName !== undefined) params.append("modelName", modelName);
-    if (temperature !== undefined) params.append("temperature", temperature.toString());
-    if (maxTokens !== undefined) params.append("maxTokens", maxTokens.toString());
-
-    return await api(`causal/conversational?${params.toString()}`, {
-        options: { method: "POST" },
+    return await api(`causal/conversational`, {
+        options: {
+            method: "POST",
+            body: JSON.stringify({ text, modelName, temperature, maxTokens })
+        },
         ...apiOptions
     });
 };

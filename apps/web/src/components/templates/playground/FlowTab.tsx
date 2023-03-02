@@ -1,50 +1,118 @@
-import { createResource, Show } from "solid-js";
+import { Edge, Node, SolidFlow } from "solid-flow";
+import { createSignal, Show } from "solid-js";
 import { createStore } from "solid-js/store";
 import { createRouteAction } from "solid-start";
 import Typing from "~/components/animation/Typing";
 import ChatArea, { ChatDisplayType } from "~/components/inputs/ChatArea";
-import MultiSelectInput from "~/components/inputs/MultiSelect";
 import SelectInput from "~/components/inputs/Select";
 import Slider from "~/components/inputs/Slider";
-import { causalLMQA, CausalLMQARequest, vectorstoreFindMany } from "~/lib/services/api-v1/api";
+import { causalLMConversational, CausalLMConversationalRequest } from "~/lib/services/api-v1/api";
 import { createStorageSignal } from "~/lib/utils/storage";
-import { Agent, agentsValidator, AgentTool, agentToolsValidator } from "~/lib/validators/Agents";
 import { ChatMessage } from "~/lib/validators/ChatMessage";
 import { CausalModel, causalModelValidator } from "~/lib/validators/TextGeneration";
 
+const initialNodes = [
+    {
+        id: "node-1",
+        position: { x: 50, y: 100 },
+        data: {
+            content: <p>This is a simple node</p>
+        },
+        inputs: 0,
+        outputs: 1
+    },
+    {
+        id: "node-2",
+        position: { x: 350, y: 100 },
+        data: {
+            label: "Node with label",
+            content: <p>This is a node with a label</p>
+        },
+        inputs: 1,
+        outputs: 1
+    },
+    {
+        id: "node-3",
+        position: { x: 350, y: 300 },
+        data: {
+            content: (
+                <p style={{ width: "200px" }}>This is a node with two inputs and two outputs</p>
+            )
+        },
+        inputs: 2,
+        outputs: 2
+    },
+
+    {
+        id: "node-4",
+        position: { x: 700, y: 100 },
+        data: {
+            label: "Only inputs",
+            content: <p>This is a node with only inputs</p>
+        },
+        inputs: 2,
+        outputs: 0
+    }
+];
+const initialEdges = [
+    {
+        id: "edge_0:0_1:0",
+        sourceNode: "node-1",
+        sourceOutput: 0,
+        targetNode: "node-2",
+        targetInput: 0
+    },
+    {
+        id: "edge_0:0_2:0",
+        sourceNode: "node-1",
+        sourceOutput: 0,
+        targetNode: "node-3",
+        targetInput: 0
+    },
+    {
+        id: "edge_1:0_3:0",
+        sourceNode: "node-2",
+        sourceOutput: 0,
+        targetNode: "node-4",
+        targetInput: 0
+    },
+    {
+        id: "edge_2:0_3:1",
+        sourceNode: "node-3",
+        sourceOutput: 0,
+        targetNode: "node-4",
+        targetInput: 1
+    }
+];
+
 const [messages, setMessages] = createStore<ChatMessage[]>([]);
-const QATab = () => {
+const Flow = () => {
+    const [nodes, setNodes] = createSignal<Node[]>(initialNodes);
+    const [edges, setEdges] = createSignal<Edge[]>(initialEdges);
+
     const [displayType, setDisplayType] = createStorageSignal<ChatDisplayType>(
-        "solidchain.qa.displayType",
+        "solidchain.flow.displayType",
         "raw"
     );
     const [model, setModel] = createStorageSignal<CausalModel | undefined>(
-        "solidchain.qa.modelName",
+        "solidchain.flow.modelName",
         undefined
     );
     const [temperature, setTemperature] = createStorageSignal<number>(
-        "solidchain.qa.temperature",
+        "solidchain.flow.temperature",
         0.7
     );
-    const [maxTokens, setMaxTokens] = createStorageSignal<number>("solidchain.qa.maxTokens", 1024);
-    const [agent, setAgent] = createStorageSignal<Agent | undefined>(
-        "solidchain.qa.agent",
-        undefined
-    );
-    const [tools, setTools] = createStorageSignal<AgentTool[]>("solidchain.qa.agentTools", [
-        "serpapi",
-        "llm-math"
-    ]);
-    const [vectorstoreTools, setVectorstoreTools] = createStorageSignal<string[]>(
-        "solidchain.qa.vectorstoreTools",
-        []
+    const [maxTokens, setMaxTokens] = createStorageSignal<number>(
+        "solidchain.flow.maxTokens",
+        1024
     );
 
-    const [vectorstores] = createResource(() => vectorstoreFindMany({}), { initialValue: [] });
-    const [submitting, generate] = createRouteAction(async (formData: CausalLMQARequest) => {
-        const response = causalLMQA(formData);
-        return response;
-    });
+    const [submitting, generate] = createRouteAction(
+        async (formData: CausalLMConversationalRequest) => {
+            const response = causalLMConversational(formData);
+            return response;
+        }
+    );
 
     const handleMessage = (message: ChatMessage) => {
         if (submitting.pending) return;
@@ -52,9 +120,7 @@ const QATab = () => {
         generate({
             text: message.content,
             modelName: model(),
-            temperature: temperature(),
-            agent: agent(),
-            agentTools: [...tools(), ...vectorstoreTools()]
+            temperature: temperature()
         }).then(response => {
             setMessages(messages => [
                 ...messages,
@@ -72,7 +138,7 @@ const QATab = () => {
         <div class="h-full w-full overflow-hidden p-4">
             <div class="grid h-full w-full flex-1 auto-cols-auto grid-cols-1 sm:grid-cols-3">
                 <div class="flex h-full w-full flex-col items-start justify-start">
-                    <h1 class="my-8 text-4xl font-thin uppercase sm:text-5xl">Q/A</h1>
+                    <h1 class="my-8 text-4xl font-thin uppercase sm:text-5xl">Flow</h1>
                     <SelectInput
                         class="mb-2 w-48"
                         options={[{ value: "raw" }, { value: "markdown" }]}
@@ -91,41 +157,6 @@ const QATab = () => {
                         initialValue={model()}
                         onValueChange={option => setModel(option.value)}
                     />
-                    <SelectInput
-                        class="mb-2 w-48"
-                        options={Object.values(agentsValidator.Values).map(value => ({
-                            value
-                        }))}
-                        label="Agent"
-                        placeholder="Agent"
-                        initialValue={agent()}
-                        onValueChange={option => setAgent(option.value)}
-                    />
-                    <MultiSelectInput
-                        class="mb-2 w-48"
-                        options={Object.values(agentToolsValidator.Values).map(value => ({
-                            value
-                        }))}
-                        label="Tools"
-                        placeholder="Tools"
-                        initialValues={tools()}
-                        onValueChange={options => setTools(options.map(option => option.value))}
-                    />
-                    <Show when={!vectorstores.loading}>
-                        <MultiSelectInput
-                            class="mb-2 w-48"
-                            options={vectorstores().map(vectorstore => ({
-                                value: vectorstore.vectorstoreId.toString(),
-                                label: vectorstore.name
-                            }))}
-                            label="Vectorstore Tools"
-                            placeholder="Vectorstore Tools"
-                            initialValues={vectorstoreTools()}
-                            onValueChange={options =>
-                                setVectorstoreTools(options.map(option => option.value))
-                            }
-                        />
-                    </Show>
                     <Slider
                         value={temperature()}
                         min={0}
@@ -144,18 +175,20 @@ const QATab = () => {
                     />
                 </div>
                 <div class="col-span-2 flex h-full w-full flex-col items-start justify-center overflow-hidden">
+                    <SolidFlow
+                        nodes={nodes()}
+                        edges={edges()}
+                        onNodesChange={(newNodes: Node[]) => {
+                            setNodes(newNodes);
+                        }}
+                        onEdgesChange={(newEdges: Edge[]) => {
+                            setEdges(newEdges);
+                        }}
+                    />
                     <ChatArea
                         class="flex h-full w-full flex-col"
                         chatContainerClass="h-full w-full"
                         messages={messages}
-                        suggestions={[
-                            {
-                                text: "list all images that were created after 2022. Show only the terminal bash command:"
-                            },
-                            {
-                                text: "What is the average age of all the people who have walked on the moon?"
-                            }
-                        ]}
                         onMessage={handleMessage}
                         displayType={displayType()}
                     />
@@ -168,4 +201,4 @@ const QATab = () => {
     );
 };
 
-export default QATab;
+export default Flow;
