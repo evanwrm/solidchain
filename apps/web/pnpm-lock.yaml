@@ -12,7 +12,7 @@ specifiers:
   '@tanstack/solid-table': ^8.7.9
   '@types/nprogress': ^0.2.0
   autoprefixer: ^10.4.13
-  clsx: ^1.2.1
+  clsx: ^2.0.0
   daisyui: ^2.51.3
   date-fns: ^2.29.3
   eslint: ^8.35.0
@@ -60,7 +60,7 @@ dependencies:
   '@solidjs/meta': 0.28.2_solid-js@1.6.11
   '@solidjs/router': 0.7.0_solid-js@1.6.11
   '@tanstack/solid-table': 8.7.9_solid-js@1.6.11
-  clsx: 1.2.1
+  clsx: 2.0.0
   date-fns: 2.29.3
   extendable-media-recorder: 7.1.5
   extendable-media-recorder-wav-encoder: 7.0.84
@@ -2402,8 +2402,8 @@ packages:
     engines: {node: '>=0.8'}
     dev: false
 
-  /clsx/1.2.1:
-    resolution: {integrity: sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==}
+  /clsx/2.0.0:
+    resolution: {integrity: sha512-rQ1+kcj+ttHG0MKVGBUXwayCCF1oh39BF5COIpRzuCEv8Mwjv0XucrI2ExNTOn9IlLifGClWQcU9BrZORvtw6Q==}
     engines: {node: '>=6'}
     dev: false
 
