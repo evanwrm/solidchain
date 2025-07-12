@@ -19,7 +19,7 @@
         "@motionone/solid": "^10.15.5",
         "@solid-primitives/devices": "^1.2.3",
         "@solid-primitives/scroll": "^2.0.9",
-        "@solid-primitives/upload": "^0.0.108",
+        "@solid-primitives/upload": "^0.0.117",
         "@solidjs/meta": "^0.28.2",
         "@solidjs/router": "^0.7.0",
         "@tanstack/solid-table": "^8.7.9",
