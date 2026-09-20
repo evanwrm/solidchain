@@ -21,7 +21,7 @@ specifiers:
   extendable-media-recorder-wav-encoder: ^7.0.84
   nprogress: ^0.2.0
   postcss: ^8.4.21
-  prettier: ^2.8.4
+  prettier: ^3.0.0
   prettier-plugin-packagejson: ^2.4.3
   prettier-plugin-tailwindcss: ^0.2.3
   rehype-autolink-headings: ^6.1.1
@@ -95,9 +95,9 @@ devDependencies:
   eslint: 8.35.0
   eslint-plugin-solid: 0.10.0_ycpbpc6yetojsgtrx3mwntkhsu
   postcss: 8.4.21
-  prettier: 2.8.4
-  prettier-plugin-packagejson: 2.4.3_prettier@2.8.4
-  prettier-plugin-tailwindcss: 0.2.3_prettier@2.8.4
+  prettier: 3.9.8
+  prettier-plugin-packagejson: 2.4.3_prettier@3.9.8
+  prettier-plugin-tailwindcss: 0.2.3_prettier@3.9.8
   solid-start-node: 0.2.22_ppwjshleycygoco43sslduznmy
   solid-start-vercel: 0.2.22_wuiowtpworfjg7n2vbvba37nn4
   tailwindcss: 3.2.7_postcss@8.4.21
@@ -5034,7 +5034,7 @@ packages:
     engines: {node: '>= 0.8.0'}
     dev: true
 
-  /prettier-plugin-packagejson/2.4.3_prettier@2.8.4:
+  /prettier-plugin-packagejson/2.4.3_prettier@3.9.8:
     resolution: {integrity: sha512-kPeeviJiwy0BgOSk7No8NmzzXfW4R9FYWni6ziA5zc1kGVVrKnBzMZdu2TUhI+I7h8/5Htt3vARYOk7KKJTTNQ==}
     peerDependencies:
       prettier: '>= 1.16.0'
@@ -5042,12 +5042,12 @@ packages:
       prettier:
         optional: true
     dependencies:
-      prettier: 2.8.4
+      prettier: 3.9.8
       sort-package-json: 2.4.1
       synckit: 0.8.5
     dev: true
 
-  /prettier-plugin-tailwindcss/0.2.3_prettier@2.8.4:
+  /prettier-plugin-tailwindcss/0.2.3_prettier@3.9.8:
     resolution: {integrity: sha512-s2N5Dh7Ao5KTV1mao5ZBnn8EKtUcDPJEkGViZIjI0Ij9TTI5zgTz4IHOxW33jOdjHKa8CSjM88scelUiC5TNRQ==}
     engines: {node: '>=12.17.0'}
     peerDependencies:
@@ -5099,12 +5099,12 @@ packages:
       prettier-plugin-twig-melody:
         optional: true
     dependencies:
-      prettier: 2.8.4
+      prettier: 3.9.8
     dev: true
 
-  /prettier/2.8.4:
-    resolution: {integrity: sha512-vIS4Rlc2FNh0BySk3Wkd6xmwxB0FpOndW5fisM5H8hsZSxU2VWVB5CWIkIjWvrHjIhxk2g3bfMKM87zNTrZddw==}
-    engines: {node: '>=10.13.0'}
+  /prettier/3.9.8:
+    resolution: {integrity: sha512-WRFq3Wn3WId7LLROfMLdH7xaFr2jR62wU8nLO6rQUOLOxNZUviyJQs1M0iIhLexSFy+L+w0ch66wtoO2jRjG0A==}
+    engines: {node: '>=14'}
     hasBin: true
     dev: true
 
